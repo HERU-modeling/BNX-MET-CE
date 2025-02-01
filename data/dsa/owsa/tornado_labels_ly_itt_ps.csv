@@ -1,0 +1,47 @@
+var_name,type,dsa_itt_ps_l,dsa_itt_ps_u
+Cohort balance (percentage incident users),Lower,[75%],
+RR non-overdose death (out-of-treatment vs. OAT),Lower,[1.9],
+Overdose rate (abstinence),Lower,[0.00E+00],
+RR overdose (1st week out-of-treatment vs. week 2+),Lower,[1.43],
+RR overdose (out-of-treatment vs. OAT),Lower,[1.77],
+RR fatal overdose (out-of-treatment vs. OAT),Lower,[5.79],
+CE-HR treatment discontinuation (incident users),Lower,[1.53],
+CE-HR mortality (incident users),Lower,[0.24],
+CE-HR treatment discontinuation (experienced users),Lower,[1.37],
+CE-HR mortality (experienced users),Lower,[0.62],
+Overdose rate (OAT),Lower,[1.11E-03],
+Overdose rate multiplier (fentanyl prevalence),Lower,[1.61],
+Overdose rate multiplier (fentanyl delta),Lower,[0.49],
+Fatal overdose rate (OAT),Lower,[0.01],
+RR non-overdose death (OAT vs. abstinence),Lower,[3.98],
+Weibull scale (out-of-treatment),Lower,[0.06],
+Weibull shape (out-of-treatment),Lower,[0.9],
+Weibull scale (abstinence),Lower,[0.03],
+Weibull shape (abstinence),Lower,[0.93],
+Weibull scale (methadone - incident users),Lower,[0.49],
+Weibull shape (methadone - incident users),Lower,[0.2],
+Weibull scale (methadone - experienced users),Lower,[0.49],
+Weibull shape (methadone - experienced users),Lower,[0.27],
+Cohort balance (percentage incident users),Upper,,[25%]
+RR non-overdose death (out-of-treatment vs. OAT),Upper,,[3.14]
+Overdose rate (abstinence),Upper,,[1.58E-04]
+RR overdose (1st week out-of-treatment vs. week 2+),Upper,,[11.43]
+RR overdose (out-of-treatment vs. OAT),Upper,,[2.33]
+RR fatal overdose (out-of-treatment vs. OAT),Upper,,[9.83]
+CE-HR treatment discontinuation (incident users),Upper,,[1.63]
+CE-HR mortality (incident users),Upper,,[1.35]
+CE-HR treatment discontinuation (experienced users),Upper,,[1.45]
+CE-HR mortality (experienced users),Upper,,[2.78]
+Overdose rate (OAT),Upper,,[1.22E-03]
+Overdose rate multiplier (fentanyl prevalence),Upper,,[1.78]
+Overdose rate multiplier (fentanyl delta),Upper,,[0.89]
+Fatal overdose rate (OAT),Upper,,[0.01]
+RR non-overdose death (OAT vs. abstinence),Upper,,[4.25]
+Weibull scale (out-of-treatment),Upper,,[0.04]
+Weibull shape (out-of-treatment),Upper,,[1.04]
+Weibull scale (abstinence),Upper,,[0.03]
+Weibull shape (abstinence),Upper,,[1.03]
+Weibull scale (methadone - incident users),Upper,,[0.5]
+Weibull shape (methadone - incident users),Upper,,[0.18]
+Weibull scale (methadone - experienced users),Upper,,[0.5]
+Weibull shape (methadone - experienced users),Upper,,[0.26]
