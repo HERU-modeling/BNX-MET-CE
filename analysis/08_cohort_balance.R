@@ -27,18 +27,10 @@ df_cohort_balance <- df_cohort_balance %>%
   dplyr::rename("Incident user (obs)" = p_inc, "Experienced user (obs)" = p_prev) %>%
   pivot_longer(cols = c("Incident user (obs)", "Experienced user (obs)"), names_to = "state", values_to = "proportion")
 
-# df_cohort_balance <- df_cohort_balance# %>%
-# rename("Incident user (obs)" = p_inc, "Experienced user (obs)" = p_prev) # %>%
-# pivot_longer(cols = c("Incident user (obs)", "Experienced user (obs)"), names_to = "state", values_to = "proportion")
-
-# l_params_bnx_itt <- update_param_list(l_params_all = l_params_bnx_itt, params_updated = l_imis_output_itt$v_calib_post_mean)
 l_params_met_itt <- update_param_list(l_params_all = l_params_met_itt, params_updated = l_imis_output_itt$v_calib_post_mean)
-# l_params_cali_itt <- update_param_list(l_params_all = l_params_cali_itt, params_updated = l_imis_output_itt$v_calib_post_mean)
 
 # Run model
-# l_out_markov_bnx_itt_ps <- markov_model(l_params_all = l_params_bnx_itt, err_stop = FALSE, verbose = TRUE, checks = FALSE, time_horizon = "full", ce_est = "itt_ps", analytic_cohort = "bnx_only")
 l_out_markov_met_itt_ps <- markov_model(l_params_all = l_params_met_itt, err_stop = FALSE, verbose = TRUE, checks = FALSE, time_horizon = "full", ce_est = "itt_ps", analytic_cohort = "met_only")
-# l_out_markov_cali_itt <- markov_model(l_params_all = l_params_cali_itt, err_stop = FALSE, verbose = TRUE, checks = FALSE, time_horizon = "cali", ce_est = "cali", analytic_cohort = "cali")
 
 ## Cohort balance
 df_m_agg_cohort_balance_trace <- as.data.frame(l_out_markov_met_itt_ps$m_m_cohort_balance_trace)
@@ -51,7 +43,6 @@ df_m_agg_cohort_balance_trace <- df_m_agg_cohort_balance_trace %>%
 df_m_agg_cohort_balance_trace_plot <- df_m_agg_cohort_balance_trace %>% gather(state, proportion, "Incident user (model)", "Experienced user (model)") # health states to plot
 df_m_agg_cohort_balance_trace_plot <- df_m_agg_cohort_balance_trace_plot %>%
   filter(year == as.integer(year)) %>%
-  # mutate(state = ifelse(state == "Incident user", "Incident user (model)", "Experienced user (model)")) %>%
   select(year, state, proportion)
 
 # Merge the data frames on 'year'

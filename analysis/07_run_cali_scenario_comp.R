@@ -22,8 +22,8 @@ source("R/cali_scenario_comp.R")
 # Load parameters
 source("Analysis/00_load_parameters.R")
 
-# Set population size for dirichlet draws
-n_sim <- 10000 # just to test function (will be set as n_sim)
+# Set number of simulations
+n_sim <- 10000
 
 # Load PSA inputs
 load(file = "outputs/psa/inputs/df_psa_params_itt.RData")
@@ -58,23 +58,8 @@ n_start <- 0 # set to 0 if running full PSA
 ### Run PSA ###
 ###############
 Sys.time()
-l_cali_output_comp_itt <- cali_output_comp(
-  scenario = "cali_itt",
-  l_cali_targets = l_cali_targets
-)
-Sys.time()
-l_cali_output_comp_pp <- cali_output_comp(
-  scenario = "cali_pp",
-  l_cali_targets = l_cali_targets
-)
-Sys.time()
 l_met_output_comp_itt <- cali_output_comp(
   scenario = "met_itt",
-  l_cali_targets = l_cali_targets
-)
-Sys.time()
-l_met_output_comp_pp <- cali_output_comp(
-  scenario = "met_pp",
   l_cali_targets = l_cali_targets
 )
 Sys.time()
@@ -83,22 +68,13 @@ l_bnx_output_comp_itt <- cali_output_comp(
   l_cali_targets = l_cali_targets
 )
 Sys.time()
-l_bnx_output_comp_pp <- cali_output_comp(
-  scenario = "bnx_pp",
-  l_cali_targets = l_cali_targets
-)
-Sys.time()
 
 stopImplicitCluster()
 
 # Save model outputs
 save(
-  l_cali_output_comp_itt,
-  l_cali_output_comp_pp,
   l_met_output_comp_itt,
-  l_met_output_comp_pp,
   l_bnx_output_comp_itt,
-  l_bnx_output_comp_pp,
   file = "outputs/psa/model_output_target.RData"
 )
 
@@ -106,61 +82,12 @@ save(
 load(file = "outputs/psa/model_output_target.RData")
 
 # Add all-cause mortality to outputs (sum of ODF and DNO)
-# Cali (SQ)
-m_outcomes_acm_cali_itt <- l_cali_output_comp_itt$m_outcomes_odf + l_cali_output_comp_itt$m_outcomes_dno
-m_outcomes_acm_cali_pp <- l_cali_output_comp_pp$m_outcomes_odf + l_cali_output_comp_pp$m_outcomes_dno
 # MET
 m_outcomes_acm_met_itt <- l_met_output_comp_itt$m_outcomes_odf + l_met_output_comp_itt$m_outcomes_dno
-m_outcomes_acm_met_pp <- l_met_output_comp_pp$m_outcomes_odf + l_met_output_comp_pp$m_outcomes_dno
 # BNX
 m_outcomes_acm_bnx_itt <- l_bnx_output_comp_itt$m_outcomes_odf + l_bnx_output_comp_itt$m_outcomes_dno
-m_outcomes_acm_bnx_pp <- l_bnx_output_comp_pp$m_outcomes_odf + l_bnx_output_comp_pp$m_outcomes_dno
 
 # Model outputs
-# Cali (ITT)
-# Fatal overdoses
-m_outcomes_odf_comb_stats_cali_itt <- cbind(
-  matrixStats::colQuantiles(l_cali_output_comp_itt$m_outcomes_odf_comb,
-    probs = c(0.025, 0.5, 0.975)
-  ),
-  matrixStats::colMeans2(l_cali_output_comp_itt$m_outcomes_odf_comb)
-)
-# Non-overdose deaths
-m_outcomes_dno_comb_stats_cali_itt <- cbind(
-  matrixStats::colQuantiles(l_cali_output_comp_itt$m_outcomes_dno_comb,
-    probs = c(0.025, 0.5, 0.975)
-  ),
-  matrixStats::colMeans2(l_cali_output_comp_itt$m_outcomes_dno_comb)
-)
-# All-cause mortality
-m_outcomes_acm_stats_cali_itt <- cbind(
-  matrixStats::colQuantiles(m_outcomes_acm_cali_itt,
-    probs = c(0.025, 0.5, 0.975)
-  ),
-  matrixStats::colMeans2(m_outcomes_acm_cali_itt)
-)
-# Cali (PP)
-# Fatal overdoses
-m_outcomes_odf_comb_stats_cali_pp <- cbind(
-  matrixStats::colQuantiles(l_cali_output_comp_pp$m_outcomes_odf_comb,
-    probs = c(0.025, 0.5, 0.975)
-  ),
-  matrixStats::colMeans2(l_cali_output_comp_pp$m_outcomes_odf_comb)
-)
-# Non-overdose deaths
-m_outcomes_dno_comb_stats_cali_pp <- cbind(
-  matrixStats::colQuantiles(l_cali_output_comp_pp$m_outcomes_dno_comb,
-    probs = c(0.025, 0.5, 0.975)
-  ),
-  matrixStats::colMeans2(l_cali_output_comp_pp$m_outcomes_dno_comb)
-)
-# All-cause mortality
-m_outcomes_acm_stats_cali_pp <- cbind(
-  matrixStats::colQuantiles(m_outcomes_acm_cali_pp,
-    probs = c(0.025, 0.5, 0.975)
-  ),
-  matrixStats::colMeans2(m_outcomes_acm_cali_pp)
-)
 # MET (ITT)
 # Fatal overdoses
 m_outcomes_odf_comb_stats_met_itt <- cbind(
@@ -182,28 +109,6 @@ m_outcomes_acm_stats_met_itt <- cbind(
     probs = c(0.025, 0.5, 0.975)
   ),
   matrixStats::colMeans2(m_outcomes_acm_met_itt)
-)
-# MET (PP)
-# Fatal overdoses
-m_outcomes_odf_comb_stats_met_pp <- cbind(
-  matrixStats::colQuantiles(l_met_output_comp_pp$m_outcomes_odf_comb,
-    probs = c(0.025, 0.5, 0.975)
-  ),
-  matrixStats::colMeans2(l_met_output_comp_pp$m_outcomes_odf_comb)
-)
-# Non-overdose deaths
-m_outcomes_dno_comb_stats_met_pp <- cbind(
-  matrixStats::colQuantiles(l_met_output_comp_pp$m_outcomes_dno_comb,
-    probs = c(0.025, 0.5, 0.975)
-  ),
-  matrixStats::colMeans2(l_met_output_comp_pp$m_outcomes_dno_comb)
-)
-# All-cause mortality
-m_outcomes_acm_stats_met_pp <- cbind(
-  matrixStats::colQuantiles(m_outcomes_acm_met_pp,
-    probs = c(0.025, 0.5, 0.975)
-  ),
-  matrixStats::colMeans2(m_outcomes_acm_met_pp)
 )
 # BNX (ITT)
 # Fatal overdoses
@@ -227,109 +132,22 @@ m_outcomes_acm_stats_bnx_itt <- cbind(
   ),
   matrixStats::colMeans2(m_outcomes_acm_bnx_itt)
 )
-# BNX (PP)
-# Fatal overdoses
-m_outcomes_odf_comb_stats_bnx_pp <- cbind(
-  matrixStats::colQuantiles(l_bnx_output_comp_pp$m_outcomes_odf_comb,
-    probs = c(0.025, 0.5, 0.975)
-  ),
-  matrixStats::colMeans2(l_bnx_output_comp_pp$m_outcomes_odf_comb)
-)
-# Non-overdose deaths
-m_outcomes_dno_comb_stats_bnx_pp <- cbind(
-  matrixStats::colQuantiles(l_bnx_output_comp_pp$m_outcomes_dno_comb,
-    probs = c(0.025, 0.5, 0.975)
-  ),
-  matrixStats::colMeans2(l_bnx_output_comp_pp$m_outcomes_dno_comb)
-)
-# All-cause mortality
-m_outcomes_acm_stats_bnx_pp <- cbind(
-  matrixStats::colQuantiles(m_outcomes_acm_bnx_pp,
-    probs = c(0.025, 0.5, 0.975)
-  ),
-  matrixStats::colMeans2(m_outcomes_acm_bnx_pp)
-)
-
-# Save model outputs as rdata
-# save(
-#   m_outcomes_odf_comb_stats_cali_itt,
-#   m_outcomes_dno_comb_stats_cali_itt,
-#   m_outcomes_odf_comb_stats_cali_pp,
-#   m_outcomes_dno_comb_stats_cali_pp,
-#   m_outcomes_odf_comb_stats_met_itt,
-#   m_outcomes_dno_comb_stats_met_itt,
-#   m_outcomes_odf_comb_stats_met_pp,
-#   m_outcomes_dno_comb_stats_met_pp,
-#   m_outcomes_odf_comb_stats_bnx_itt,
-#   m_outcomes_dno_comb_stats_bnx_itt,
-#   m_outcomes_odf_comb_stats_bnx_pp,
-#   m_outcomes_dno_comb_stats_bnx_pp,
-#   file = "outputs/psa/model_output_target.RData"
-# )
-
-# Load model outputs
-load(file = "outputs/psa/model_output_target.RData")
 
 m_time <- matrix(l_cali_targets$df_odf$time)
 m_pop <- matrix(l_cali_targets$df_odf$pop)
 
 # Combine model outputs with time and population
-# Cali (ITT)
-m_outcomes_odf_comb_fit_cali_itt <- cbind(m_outcomes_odf_comb_stats_cali_itt, m_time, m_pop)
-m_outcomes_acm_comb_fit_cali_itt <- cbind(m_outcomes_acm_stats_cali_itt, m_time, m_pop)
-# Cali (PP)
-m_outcomes_odf_comb_fit_cali_pp <- cbind(m_outcomes_odf_comb_stats_cali_pp, m_time, m_pop)
-m_outcomes_acm_comb_fit_cali_pp <- cbind(m_outcomes_acm_stats_cali_pp, m_time, m_pop)
 # MET (ITT)
 m_outcomes_odf_comb_fit_met_itt <- cbind(m_outcomes_odf_comb_stats_met_itt, m_time, m_pop)
 m_outcomes_acm_comb_fit_met_itt <- cbind(m_outcomes_acm_stats_met_itt, m_time, m_pop)
-# MET (PP)
-m_outcomes_odf_comb_fit_met_pp <- cbind(m_outcomes_odf_comb_stats_met_pp, m_time, m_pop)
-m_outcomes_acm_comb_fit_met_pp <- cbind(m_outcomes_acm_stats_met_pp, m_time, m_pop)
 # BNX (ITT)
 m_outcomes_odf_comb_fit_bnx_itt <- cbind(m_outcomes_odf_comb_stats_bnx_itt, m_time, m_pop)
 m_outcomes_acm_comb_fit_bnx_itt <- cbind(m_outcomes_acm_stats_bnx_itt, m_time, m_pop)
-# BNX (PP)
-m_outcomes_odf_comb_fit_bnx_pp <- cbind(m_outcomes_odf_comb_stats_bnx_pp, m_time, m_pop)
-m_outcomes_acm_comb_fit_bnx_pp <- cbind(m_outcomes_acm_stats_bnx_pp, m_time, m_pop)
 
 # Create dataframes
 # Fatal overdoses
-# Cali (ITT)
-df_model_targets_odf_fit_cali_itt <- m_outcomes_odf_comb_fit_cali_itt %>%
-  as_tibble() %>%
-  setNames(c("ci_low", "median", "ci_high", "pe", "time", "pop")) %>%
-  mutate(
-    group = "Status quo (observed)",
-    num = pe * m_pop,
-    low = ci_low * m_pop,
-    high = ci_high * m_pop
-  ) %>%
-  select(time, group, num, low, high)
-# Cali (PP)
-df_model_targets_odf_fit_cali_pp <- m_outcomes_odf_comb_fit_cali_pp %>%
-  as_tibble() %>%
-  setNames(c("ci_low", "median", "ci_high", "pe", "time", "pop")) %>%
-  mutate(
-    group = "Status quo (observed)",
-    num = pe * m_pop,
-    low = ci_low * m_pop,
-    high = ci_high * m_pop
-  ) %>%
-  select(time, group, num, low, high)
 # MET (ITT)
 df_model_targets_odf_fit_met_itt <- m_outcomes_odf_comb_fit_met_itt %>%
-  as_tibble() %>%
-  setNames(c("ci_low", "median", "ci_high", "pe", "time", "pop")) %>%
-  mutate(
-    group = "Methadone-only (counterfactual)",
-    num = pe * m_pop,
-    low = ci_low * m_pop,
-    high = ci_high * m_pop
-  ) %>%
-  select(time, group, num, low, high)
-# MET (PP)
-df_model_targets_odf_fit_met_pp <- m_outcomes_odf_comb_fit_met_pp %>%
   as_tibble() %>%
   setNames(c("ci_low", "median", "ci_high", "pe", "time", "pop")) %>%
   mutate(
@@ -350,41 +168,8 @@ df_model_targets_odf_fit_bnx_itt <- m_outcomes_odf_comb_fit_bnx_itt %>%
     high = ci_high * m_pop
   ) %>%
   select(time, group, num, low, high)
-# BNX (PP)
-df_model_targets_odf_fit_bnx_pp <- m_outcomes_odf_comb_fit_bnx_pp %>%
-  as_tibble() %>%
-  setNames(c("ci_low", "median", "ci_high", "pe", "time", "pop")) %>%
-  mutate(
-    group = "BNX-only (counterfactual)",
-    num = pe * m_pop,
-    low = ci_low * m_pop,
-    high = ci_high * m_pop
-  ) %>%
-  select(time, group, num, low, high)
 
 # All-cause mortality
-# Cali (ITT)
-df_model_targets_acm_fit_cali_itt <- m_outcomes_acm_comb_fit_cali_itt %>%
-  as_tibble() %>%
-  setNames(c("ci_low", "median", "ci_high", "pe", "time", "pop")) %>%
-  mutate(
-    group = "Status quo (observed)",
-    num = pe * m_pop,
-    low = ci_low * m_pop,
-    high = ci_high * m_pop
-  ) %>%
-  select(time, group, num, low, high)
-# Cali (PP)
-df_model_targets_acm_fit_cali_pp <- m_outcomes_acm_comb_fit_cali_pp %>%
-  as_tibble() %>%
-  setNames(c("ci_low", "median", "ci_high", "pe", "time", "pop")) %>%
-  mutate(
-    group = "Status quo (observed)",
-    num = pe * m_pop,
-    low = ci_low * m_pop,
-    high = ci_high * m_pop
-  ) %>%
-  select(time, group, num, low, high)
 # MET (ITT)
 df_model_targets_acm_fit_met_itt <- m_outcomes_acm_comb_fit_met_itt %>%
   as_tibble() %>%
@@ -396,30 +181,8 @@ df_model_targets_acm_fit_met_itt <- m_outcomes_acm_comb_fit_met_itt %>%
     high = ci_high * m_pop
   ) %>%
   select(time, group, num, low, high)
-# MET (PP)
-df_model_targets_acm_fit_met_pp <- m_outcomes_acm_comb_fit_met_pp %>%
-  as_tibble() %>%
-  setNames(c("ci_low", "median", "ci_high", "pe", "time", "pop")) %>%
-  mutate(
-    group = "Methadone-only (counterfactual)",
-    num = pe * m_pop,
-    low = ci_low * m_pop,
-    high = ci_high * m_pop
-  ) %>%
-  select(time, group, num, low, high)
 # BNX (ITT)
 df_model_targets_acm_fit_bnx_itt <- m_outcomes_acm_comb_fit_bnx_itt %>%
-  as_tibble() %>%
-  setNames(c("ci_low", "median", "ci_high", "pe", "time", "pop")) %>%
-  mutate(
-    group = "BNX-only (counterfactual)",
-    num = pe * m_pop,
-    low = ci_low * m_pop,
-    high = ci_high * m_pop
-  ) %>%
-  select(time, group, num, low, high)
-# BNX (PP)
-df_model_targets_acm_fit_bnx_pp <- m_outcomes_acm_comb_fit_bnx_pp %>%
   as_tibble() %>%
   setNames(c("ci_low", "median", "ci_high", "pe", "time", "pop")) %>%
   mutate(
@@ -454,13 +217,7 @@ df_targets_acm <- l_cali_targets$df_acm %>%
 
 # Combine
 df_fit_odf_itt <- bind_rows(df_targets_odf, df_model_targets_odf_fit_met_itt, df_model_targets_odf_fit_bnx_itt)
-df_fit_odf_pp <- bind_rows(df_targets_odf, df_model_targets_odf_fit_met_pp, df_model_targets_odf_fit_bnx_pp)
 df_fit_acm_itt <- bind_rows(df_targets_acm, df_model_targets_acm_fit_met_itt, df_model_targets_acm_fit_bnx_itt)
-df_fit_acm_pp <- bind_rows(df_targets_acm, df_model_targets_acm_fit_met_pp, df_model_targets_acm_fit_bnx_pp)
-
-# Using calibration outputs instead of targets
-df_cali_fit_odf_itt <- bind_rows(df_model_targets_odf_fit_cali_itt, df_model_targets_odf_fit_met_itt, df_model_targets_odf_fit_bnx_itt)
-df_cali_fit_acm_itt <- bind_rows(df_model_targets_acm_fit_cali_itt, df_model_targets_acm_fit_met_itt, df_model_targets_acm_fit_bnx_itt)
 
 # Plot fit vs. targets
 ## Fatal overdose
@@ -472,56 +229,6 @@ p_temp_odf_itt <- ggplot(df_fit_odf_itt) +
     linewidth = .75
   )
 plot_fit_odf_itt <- p_temp_odf_itt + labs(title = NULL, x = "Year", y = "Fatal overdoses") +
-  scale_color_manual(values = c("#4B92DB", "#0C2340", "#C8102E")) +
-  scale_x_continuous(
-    breaks = l_cali_targets$df_odf$time,
-    labels = c("2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020*")
-  ) +
-  scale_y_continuous(
-    breaks = c(100, 200, 300, 400, 500),
-    limits = c(0, 600)
-  ) +
-  theme(
-    panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"),
-    plot.title = element_text(hjust = 0.02, vjust = -7),
-    legend.position = "none",
-    legend.title = element_blank(),
-    text = element_text(size = 15)
-  )
-
-# PP
-p_temp_odf_pp <- ggplot(df_fit_odf_pp) +
-  geom_pointrange(
-    aes(x = time, y = num, ymin = low, ymax = high, color = group),
-    position = position_dodge(width = 25),
-    linewidth = .75
-  )
-plot_fit_odf_pp <- p_temp_odf_pp + labs(title = NULL, x = "Year", y = "Fatal overdoses") +
-  scale_color_manual(values = c("#4B92DB", "#0C2340", "#C8102E")) +
-  scale_x_continuous(
-    breaks = l_cali_targets$df_odf$time,
-    labels = c("2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020*")
-  ) +
-  scale_y_continuous(
-    breaks = c(100, 200, 300, 400, 500),
-    limits = c(0, 600)
-  ) +
-  theme(
-    panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"),
-    plot.title = element_text(hjust = 0.02, vjust = -7),
-    legend.position = "none",
-    legend.title = element_blank(),
-    text = element_text(size = 15)
-  )
-
-# Using calibration outputs instead of targets
-p_temp_cali_odf_itt <- ggplot(df_cali_fit_odf_itt) +
-  geom_pointrange(
-    aes(x = time, y = num, ymin = low, ymax = high, color = group),
-    position = position_dodge(width = 25),
-    linewidth = .75
-  )
-plot_cali_fit_odf_itt <- p_temp_cali_odf_itt + labs(title = NULL, x = "Year", y = "Fatal overdoses") +
   scale_color_manual(values = c("#4B92DB", "#0C2340", "#C8102E")) +
   scale_x_continuous(
     breaks = l_cali_targets$df_odf$time,
@@ -569,55 +276,6 @@ plot_fit_acm_itt <- p_temp_acm_itt + labs(title = NULL, x = "Year", y = "All-cau
 #   width = 6, height = 6, dpi = 350
 # )
 
-# PP
-p_temp_acm_pp <- ggplot(df_fit_acm_pp) +
-  geom_pointrange(
-    aes(x = time, y = num, ymin = low, ymax = high, color = group),
-    position = position_dodge(width = 25),
-    linewidth = .75
-  )
-plot_fit_acm_pp <- p_temp_acm_pp + labs(title = NULL, x = "Year", y = "All-cause deaths") +
-  scale_color_manual(values = c("#4B92DB", "#0C2340", "#C8102E")) +
-  scale_x_continuous(
-    breaks = l_cali_targets$df_acm$time,
-    labels = c("2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020*")
-  ) +
-  scale_y_continuous(
-    breaks = c(100, 200, 300, 400, 500),
-    limits = c(0, 600)
-  ) +
-  theme(
-    panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"),
-    plot.title = element_text(hjust = 0.02, vjust = -7),
-    legend.position = "none",
-    legend.title = element_blank(),
-    text = element_text(size = 15)
-  )
-
-p_temp_cali_acm_itt <- ggplot(df_cali_fit_acm_itt) +
-  geom_pointrange(
-    aes(x = time, y = num, ymin = low, ymax = high, color = group),
-    position = position_dodge(width = 25),
-    linewidth = .75
-  )
-plot_cali_fit_acm_itt <- p_temp_cali_acm_itt + labs(title = NULL, x = "Year", y = "All-cause deaths") +
-  scale_color_manual(values = c("#4B92DB", "#0C2340", "#C8102E")) +
-  scale_x_continuous(
-    breaks = l_cali_targets$df_acm$time,
-    labels = c("2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020*")
-  ) +
-  scale_y_continuous(
-    breaks = c(100, 200, 300, 400, 500),
-    limits = c(0, 600)
-  ) +
-  theme(
-    panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"),
-    plot.title = element_text(hjust = 0.02, vjust = -7),
-    legend.position = "none",
-    legend.title = element_blank(),
-    text = element_text(size = 15)
-  )
-
 # Plot for extracting legend only
 plot_fit_odf_leg <- p_temp_odf_itt + labs(title = NULL, x = "Year", y = "Fatal overdoses") +
   theme_classic() +
@@ -647,25 +305,5 @@ plot_fit_comb_itt <- grid.arrange(arrangeGrob(plot_fit_odf_itt, plot_fit_acm_itt
 )
 ggsave(plot_fit_comb_itt,
   filename = "plots/psa/model_output_target_itt.png",
-  width = 6, height = 6
-)
-
-# Combine plots (PP)
-plot_fit_comb_pp <- grid.arrange(arrangeGrob(plot_fit_odf_pp, plot_fit_acm_pp, nrow = 2),
-  mylegend,
-  nrow = 2, heights = c(6, .5), widths = 6
-)
-ggsave(plot_fit_comb_pp,
-  filename = "plots/psa/model_output_target_pp.png",
-  width = 6, height = 6
-)
-
-# combine plots (calibration outputs)
-plot_cali_fit_comb_itt <- grid.arrange(arrangeGrob(plot_cali_fit_odf_itt, plot_cali_fit_acm_itt, nrow = 2),
-  mylegend,
-  nrow = 2, heights = c(6, .5), widths = 6
-)
-ggsave(plot_cali_fit_comb_itt,
-  filename = "plots/psa/model_output_target_cali_itt.png",
   width = 6, height = 6
 )

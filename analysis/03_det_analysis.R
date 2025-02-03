@@ -24,7 +24,6 @@ l_outcomes_met_itt_ps <- outcomes(l_params_all = l_params_met_itt, v_params_cali
 
 df_outcomes_itt_ps <- rbind(l_outcomes_bnx_itt_ps$df_outcomes, l_outcomes_met_itt_ps$df_outcomes)
 rownames(df_outcomes_itt_ps) <- c("BNX", "Methadone")
-# write.csv(df_outcomes_itt_ps, "outputs/outcomes/itt/det_outcomes_itt.csv", row.names = TRUE)
 
 # Incremental outcomes
 l_inc_outcomes_itt_ps <- inc_outcomes(outcomes_comp = l_outcomes_met_itt_ps, outcomes_int = l_outcomes_bnx_itt_ps)
@@ -36,10 +35,6 @@ write.csv(l_outcomes_bnx_itt_ps$m_m_trace, "outputs/trace/itt/full_trace_bnx_itt
 # Aggregate trace
 write.csv(l_outcomes_met_itt_ps$m_m_agg_trace, "outputs/trace/itt/agg_trace_met.csv", row.names = TRUE)
 write.csv(l_outcomes_bnx_itt_ps$m_m_agg_trace, "outputs/trace/itt/agg_trace_bnx.csv", row.names = TRUE)
-
-# Cohort balance trace
-write.csv(l_outcomes_met_itt_ps$m_m_cohort_balance_trace, "outputs/trace/itt/cohort_balance_trace_met.csv", row.names = TRUE)
-write.csv(l_outcomes_bnx_itt_ps$m_m_cohort_balance_trace, "outputs/trace/itt/cohort_balance_trace_bnx.csv", row.names = TRUE)
 
 # Outcomes
 # Totals by scenario
