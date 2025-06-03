@@ -60,7 +60,7 @@ tbl_df_summ_inc_ly_psa_itt_ps <- df_incremental_psa_itt_ps_scaled %>%
         )
       )
     ),
-    scenario = "Initiator analysis"
+    scenario = "Initiator analysis (base-case)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
@@ -99,7 +99,7 @@ tbl_df_summ_inc_odf_psa_itt_ps <- df_incremental_psa_itt_ps_scaled %>%
         )
       )
     ),
-    scenario = "Initiator analysis"
+    scenario = "Initiator analysis (base-case)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
@@ -138,7 +138,7 @@ tbl_df_summ_inc_odn_psa_itt_ps <- df_incremental_psa_itt_ps_scaled %>%
         )
       )
     ),
-    scenario = "Initiator analysis"
+    scenario = "Initiator analysis (base-case)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
@@ -177,7 +177,7 @@ tbl_df_summ_inc_acm_psa_itt_ps <- df_incremental_psa_itt_ps_scaled %>%
         )
       )
     ),
-    scenario = "Initiator analysis"
+    scenario = "Initiator analysis (base-case)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
@@ -219,7 +219,7 @@ tbl_df_summ_inc_ly_psa_pp <- df_incremental_psa_pp_scaled %>%
         )
       )
     ),
-    scenario = "Per-protocol sensitivity analysis"
+    scenario = "Per-protocol analysis (alternate-case)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
@@ -258,7 +258,7 @@ tbl_df_summ_inc_odf_psa_pp <- df_incremental_psa_pp_scaled %>%
         )
       )
     ),
-    scenario = "Per-protocol sensitivity analysis"
+    scenario = "Per-protocol analysis (alternate-case)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
@@ -297,7 +297,7 @@ tbl_df_summ_inc_odn_psa_pp <- df_incremental_psa_pp_scaled %>%
         )
       )
     ),
-    scenario = "Per-protocol sensitivity analysis"
+    scenario = "Per-protocol analysis (alternate-case)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
@@ -336,7 +336,7 @@ tbl_df_summ_inc_acm_psa_pp <- df_incremental_psa_pp_scaled %>%
         )
       )
     ),
-    scenario = "Per-protocol sensitivity analysis"
+    scenario = "Per-protocol analysis (alternate-case)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
@@ -378,7 +378,7 @@ tbl_df_summ_inc_ly_psa_pp_hd <- df_incremental_psa_pp_hd_scaled %>%
         )
       )
     ),
-    scenario = "Per-protocol sensitivity analysis (high-dose)"
+    scenario = "High-dose (sensitivity analysis)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
@@ -417,7 +417,7 @@ tbl_df_summ_inc_odf_psa_pp_hd <- df_incremental_psa_pp_hd_scaled %>%
         )
       )
     ),
-    scenario = "Per-protocol sensitivity analysis (high-dose)"
+    scenario = "High-dose (sensitivity analysis)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
@@ -456,7 +456,7 @@ tbl_df_summ_inc_odn_psa_pp_hd <- df_incremental_psa_pp_hd_scaled %>%
         )
       )
     ),
-    scenario = "Per-protocol sensitivity analysis (high-dose)"
+    scenario = "High-dose (sensitivity analysis)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
@@ -495,7 +495,7 @@ tbl_df_summ_inc_acm_psa_pp_hd <- df_incremental_psa_pp_hd_scaled %>%
         )
       )
     ),
-    scenario = "Per-protocol sensitivity analysis (high-dose)"
+    scenario = "High-dose (sensitivity analysis)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
@@ -528,6 +528,15 @@ write.csv(tbl_df_summ_inc_acm_psa_comb,
 ### Life-years-lost plot ###
 ############################
 # Output scaled up to cohort
+tbl_df_summ_inc_ly_psa_comb$scenario <- factor(
+  tbl_df_summ_inc_ly_psa_comb$scenario,
+  levels = c(
+    "Initiator analysis (base-case)",
+    "Per-protocol analysis (alternate-case)",
+    "High-dose (sensitivity analysis)"
+  )
+)
+
 plot_psa_ly_scaled <- ggplot(tbl_df_summ_inc_ly_psa_comb) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "darkgrey", linewidth = 0.75) + # NEW
   geom_pointrange(
@@ -536,8 +545,11 @@ plot_psa_ly_scaled <- ggplot(tbl_df_summ_inc_ly_psa_comb) +
     linewidth = .75
   ) +
   scale_color_manual(values = c("#FC4C02", "#005778", "#008E97")) +
-  # scale_color_manual(values = c("Initiator analysis (full population)" = "#081d58", "Per-protocol SA (full population)" = "#41b6c4", "Per-protocol SA (high-dose)" = "#c7e9b4")) +
-  scale_linetype_manual(values = c("Initiator analysis" = "solid", "Per-protocol sensitivity analysis" = "solid", "Per-protocol sensitivity analysis (high-dose)" = "solid")) +
+  scale_linetype_manual(values = c(
+    "Initiator analysis (base-case)" = "solid",
+    "Per-protocol analysis (alternate-case)" = "solid",
+    "High-dose (sensitivity analysis)" = "solid"
+  )) +
   labs(y = "Incremental life years (BNX vs. methadone)", x = "Year") +
   scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), labels = c("2010", "2012", "2014", "2016", "2018", "2020*"), limits = c(2009, 2021)) +
   theme(
