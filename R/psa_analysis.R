@@ -20,6 +20,11 @@ psa_analysis <- function(ce_est) { # choose one of three analytic scenarios ("IT
     l_params_bnx <- l_params_bnx_itt
     df_psa_params_met <- df_psa_params_itt
     df_psa_params_bnx <- df_psa_params_itt
+  } else if (ce_est == "itt_rr_sa") {
+    l_params_met <- l_params_met_itt
+    l_params_bnx <- l_params_bnx_itt
+    df_psa_params_met <- df_psa_params_itt_rr_sa
+    df_psa_params_bnx <- df_psa_params_itt_rr_sa
   } else if (ce_est == "pp_hd") {
     l_params_met <- l_params_met_pp
     l_params_bnx <- l_params_bnx_pp
@@ -33,6 +38,12 @@ psa_analysis <- function(ce_est) { # choose one of three analytic scenarios ("IT
   } else {
     stop("Must select valid scenario")
   }
+
+  # Run PSA blockwise
+  n_runs <- nrow(df_psa_params_met) # n_sim to run entire PSA
+  n_block_size <- 1000 # size of block for each loop
+  n_blocks <- if_else(n_runs / n_block_size < 1, 1, n_runs / n_block_size) # to run entire set
+  n_start <- 0 # set to 0 if running full PSA
 
   for (j in (0:(n_blocks - 1))) {
     l_psa <- foreach(i = (n_start + 1 + j * n_block_size):(n_start + (j + 1) * n_block_size), .combine = combine_custom, .packages = "tidyr") %dopar% {

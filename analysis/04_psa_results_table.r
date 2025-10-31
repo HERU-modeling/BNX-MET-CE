@@ -13,7 +13,7 @@ source("Analysis/00_load_parameters.R")
 # Set population size for dirichlet draws
 # n_pop_cohort <- l_params_bnx_itt$n_pop_oat # update with cohort size
 # n_pop_est <- l_params_bnx_itt$n_pop_est
-n_sim <- 10000 # just to test function (will be set as n_sim)
+# n_sim <- 10000 # just to test function (will be set as n_sim)
 
 ### Load PSA results
 load(file = "outputs/psa/outcomes_psa.RData")

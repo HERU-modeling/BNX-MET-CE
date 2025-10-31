@@ -44,10 +44,13 @@ generate_psa_params <- function(n_sim = n_sim, seed = seed, n_pop = n_pop, # sce
   # Number of simulations
   n_sim <- n_sim
 
-
-  if (n_sim != nrow(df_calib_post)) {
-    warning("Number of PSA simulations and posterior draws not equal")
-    df_calib_post <- df_calib_post[1:n_sim, ] # Truncate to match simulations
+  if (n_sim <= nrow(df_calib_post)) {
+    df_calib_post <- df_calib_post[1:n_sim, ] # Truncate to match simulations (if necessary)
+  } else if (n_sim > nrow(df_calib_post)) {
+    # Keep original rows and sample additional rows with replacement
+    additional_rows <- n_sim - nrow(df_calib_post)
+    sampled_rows <- df_calib_post[sample(nrow(df_calib_post), additional_rows, replace = TRUE), ]
+    df_calib_post <- rbind(df_calib_post, sampled_rows)
   }
 
   # Set seed for random number generator

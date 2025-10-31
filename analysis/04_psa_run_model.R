@@ -25,6 +25,7 @@ source("Analysis/00_load_parameters.R")
 n_pop_cohort <- l_params_bnx_itt$n_pop_oat # update with cohort size
 # n_pop_est <- l_params_bnx_itt$n_pop_est
 n_sim <- 10000 # just to test function (will be set as n_sim)
+n_sim_rr_sa <- 20000 # number of simulations for testing
 
 ### PSA model outputs
 ### Run Markov model for PSA draws and return outputs ###
@@ -42,6 +43,20 @@ df_psa_params_itt <- generate_psa_params(
   file.imis_output = "outputs/Calibration/itt/imis_output_itt.RData"
 )
 
+# Intent-to-treat (R&R SA)
+df_psa_params_itt_rr_sa <- generate_psa_params(
+  n_sim = n_sim_rr_sa, seed = 3730687, n_pop = n_pop_cohort,
+  file.death_hr = "data/death_hr.csv",
+  file.weibull = "data/weibull_itt.csv",
+  file.ce_tx = "data/ce_tx.csv",
+  file.ce_death = "data/ce_death.csv",
+  file.overdose = "data/overdose.csv",
+  file.fentanyl = "data/fentanyl.csv",
+  file.naloxone = "data/naloxone.csv",
+  file.imis_output = "outputs/Calibration/itt/imis_output_itt.RData"
+)
+
+# Per-protocol
 df_psa_params_pp <- generate_psa_params(
   n_sim = n_sim, seed = 3730687, n_pop = n_pop_cohort,
   file.death_hr = "data/death_hr.csv",
@@ -53,8 +68,6 @@ df_psa_params_pp <- generate_psa_params(
   file.naloxone = "data/naloxone.csv",
   file.imis_output = "outputs/Calibration/pp/imis_output_pp.RData"
 )
-
-# Per-protocol
 
 # Output data
 ## As .RData
@@ -75,7 +88,7 @@ write.csv(df_psa_params_pp, "outputs/psa/inputs/input_psa_pp.csv",
 
 # Load PSA inputs
 # load(file = "outputs/psa/inputs/df_psa_params_itt.RData")
-load(file = "outputs/psa/inputs/df_psa_params_pp.RData")
+# load(file = "outputs/psa/inputs/df_psa_params_pp.RData")
 
 # Set number of cores
 n_cores <- detectCores()
@@ -84,16 +97,18 @@ clusterExport(cl, c("markov_model", "update_param_list", "outcomes", "inc_outcom
 registerDoParallel(cl)
 
 # Run PSA blockwise
-n_runs <- n_sim # n_sim to run entire PSA
-n_block_size <- 1000 # size of block for each loop
-n_blocks <- if_else(n_runs / n_block_size < 1, 1, n_runs / n_block_size) # to run entire set
-n_start <- 0 # set to 0 if running full PSA
+# n_runs <- nrow(df_psa_params_itt_rr_sa)
+# n_block_size <- 1000 # size of block for each loop
+# n_blocks <- if_else(n_runs / n_block_size < 1, 1, n_runs / n_block_size) # to run entire set
+# n_start <- 0 # set to 0 if running full PSA
 
 ###############
 ### Run PSA ###
 ###############
 Sys.time()
 l_psa_itt_ps <- psa_analysis(ce_est = "itt_ps")
+Sys.time()
+l_psa_itt_rr_sa <- psa_analysis(ce_est = "itt_rr_sa")
 Sys.time()
 l_psa_pp <- psa_analysis(ce_est = "pp")
 Sys.time()
@@ -109,6 +124,12 @@ df_outcomes_bnx_psa_itt_ps <- l_psa_itt_ps$df_outcomes_bnx_psa_comb
 df_incremental_psa_itt_ps <- l_psa_itt_ps$df_incremental_psa_comb
 df_incremental_psa_itt_ps_scaled <- l_psa_itt_ps$df_incremental_psa_scaled_comb
 
+## ITT - R&R SA
+df_outcomes_met_psa_itt_rr_sa <- l_psa_itt_rr_sa$df_outcomes_met_psa_comb
+df_outcomes_bnx_psa_itt_rr_sa <- l_psa_itt_rr_sa$df_outcomes_bnx_psa_comb
+df_incremental_psa_itt_rr_sa <- l_psa_itt_rr_sa$df_incremental_psa_comb
+df_incremental_psa_itt_rr_sa_scaled <- l_psa_itt_rr_sa$df_incremental_psa_scaled_comb
+
 ## PP - Per protocol
 df_outcomes_met_psa_pp <- l_psa_pp$df_outcomes_met_psa_comb
 df_outcomes_bnx_psa_pp <- l_psa_pp$df_outcomes_bnx_psa_comb
@@ -123,17 +144,34 @@ df_incremental_psa_pp_hd_scaled <- l_psa_pp_hd$df_incremental_psa_scaled_comb
 
 
 ## As .RData
+# ITT - Propensity score
 save(df_outcomes_met_psa_itt_ps,
   df_outcomes_bnx_psa_itt_ps,
   df_incremental_psa_itt_ps,
   df_incremental_psa_itt_ps_scaled,
-  df_outcomes_met_psa_pp,
+  file = "outputs/psa/outcomes_psa_itt_ps.RData"
+)
+
+# ITT - R&R SA
+save(df_outcomes_met_psa_itt_rr_sa,
+  df_outcomes_bnx_psa_itt_rr_sa,
+  df_incremental_psa_itt_rr_sa,
+  df_incremental_psa_itt_rr_sa_scaled,
+  file = "outputs/psa/outcomes_psa_itt_rr_sa.RData"
+)
+
+# PP - Per protocol
+save(df_outcomes_met_psa_pp,
   df_outcomes_bnx_psa_pp,
   df_incremental_psa_pp,
   df_incremental_psa_pp_scaled,
-  df_outcomes_met_psa_pp_hd,
+  file = "outputs/psa/outcomes_psa_pp.RData"
+)
+
+# PP - Per protocol (high dose)
+save(df_outcomes_met_psa_pp_hd,
   df_outcomes_bnx_psa_pp_hd,
   df_incremental_psa_pp_hd,
   df_incremental_psa_pp_hd_scaled,
-  file = "outputs/psa/outcomes_psa.RData"
+  file = "outputs/psa/outcomes_psa_pp_hd.RData"
 )
