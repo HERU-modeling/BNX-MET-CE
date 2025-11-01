@@ -69,6 +69,14 @@ df_psa_params_pp <- generate_psa_params(
   file.imis_output = "outputs/Calibration/pp/imis_output_pp.RData"
 )
 
+# Load cohort balance parameters
+# 100% Inc; 0% Prev
+v_init_dist_met_100_inc <- read.csv(file = "data/dsa/owsa/init_dist_met_100_inc.csv", row.names = 1, header = TRUE)
+v_init_dist_bnx_100_inc <- read.csv(file = "data/dsa/owsa/init_dist_bnx_100_inc.csv", row.names = 1, header = TRUE)
+# 0% Inc; 100% Prev
+v_init_dist_met_0_inc <- read.csv(file = "data/dsa/owsa/init_dist_met_0_inc.csv", row.names = 1, header = TRUE)
+v_init_dist_bnx_0_inc <- read.csv(file = "data/dsa/owsa/init_dist_bnx_0_inc.csv", row.names = 1, header = TRUE)
+
 # Output data
 ## As .RData
 save(df_psa_params_itt,
@@ -108,7 +116,22 @@ registerDoParallel(cl)
 Sys.time()
 l_psa_itt_ps <- psa_analysis(ce_est = "itt_ps")
 Sys.time()
-l_psa_itt_rr_sa <- psa_analysis(ce_est = "itt_rr_sa")
+# l_psa_itt_rr_sa <- psa_analysis(ce_est = "itt_rr_sa")
+l_psa_itt_rr_100_inc_sa <- psa_analysis(
+  ce_est = "itt_rr_100_inc_sa",
+  v_init_dist_met_100_inc = v_init_dist_met_100_inc,
+  v_init_dist_met_0_inc = v_init_dist_met_0_inc,
+  v_init_dist_bnx_100_inc = v_init_dist_bnx_100_inc,
+  v_init_dist_bnx_0_inc = v_init_dist_bnx_0_inc
+)
+Sys.time()
+l_psa_itt_rr_0_inc_sa <- psa_analysis(
+  ce_est = "itt_rr_0_inc_sa",
+  v_init_dist_met_100_inc = v_init_dist_met_100_inc,
+  v_init_dist_met_0_inc = v_init_dist_met_0_inc,
+  v_init_dist_bnx_100_inc = v_init_dist_bnx_100_inc,
+  v_init_dist_bnx_0_inc = v_init_dist_bnx_0_inc
+)
 Sys.time()
 l_psa_pp <- psa_analysis(ce_est = "pp")
 Sys.time()
@@ -125,10 +148,22 @@ df_incremental_psa_itt_ps <- l_psa_itt_ps$df_incremental_psa_comb
 df_incremental_psa_itt_ps_scaled <- l_psa_itt_ps$df_incremental_psa_scaled_comb
 
 ## ITT - R&R SA
-df_outcomes_met_psa_itt_rr_sa <- l_psa_itt_rr_sa$df_outcomes_met_psa_comb
-df_outcomes_bnx_psa_itt_rr_sa <- l_psa_itt_rr_sa$df_outcomes_bnx_psa_comb
-df_incremental_psa_itt_rr_sa <- l_psa_itt_rr_sa$df_incremental_psa_comb
-df_incremental_psa_itt_rr_sa_scaled <- l_psa_itt_rr_sa$df_incremental_psa_scaled_comb
+# df_outcomes_met_psa_itt_rr_sa <- l_psa_itt_rr_sa$df_outcomes_met_psa_comb
+# df_outcomes_bnx_psa_itt_rr_sa <- l_psa_itt_rr_sa$df_outcomes_bnx_psa_comb
+# df_incremental_psa_itt_rr_sa <- l_psa_itt_rr_sa$df_incremental_psa_comb
+# df_incremental_psa_itt_rr_sa_scaled <- l_psa_itt_rr_sa$df_incremental_psa_scaled_comb
+
+## ITT - R&R SA (100% Inc)
+df_outcomes_met_psa_itt_rr_100_inc_sa <- l_psa_itt_rr_100_inc_sa$df_outcomes_met_psa_comb
+df_outcomes_bnx_psa_itt_rr_100_inc_sa <- l_psa_itt_rr_100_inc_sa$df_outcomes_bnx_psa_comb
+df_incremental_psa_itt_rr_100_inc_sa <- l_psa_itt_rr_100_inc_sa$df_incremental_psa_comb
+df_incremental_psa_itt_rr_100_inc_sa_scaled <- l_psa_itt_rr_100_inc_sa$df_incremental_psa_scaled_comb
+
+## ITT - R&R SA (0% Inc)
+df_outcomes_met_psa_itt_rr_0_inc_sa <- l_psa_itt_rr_0_inc_sa$df_outcomes_met_psa_comb
+df_outcomes_bnx_psa_itt_rr_0_inc_sa <- l_psa_itt_rr_0_inc_sa$df_outcomes_bnx_psa_comb
+df_incremental_psa_itt_rr_0_inc_sa <- l_psa_itt_rr_0_inc_sa$df_incremental_psa_comb
+df_incremental_psa_itt_rr_0_inc_sa_scaled <- l_psa_itt_rr_0_inc_sa$df_incremental_psa_scaled_comb
 
 ## PP - Per protocol
 df_outcomes_met_psa_pp <- l_psa_pp$df_outcomes_met_psa_comb
@@ -153,11 +188,27 @@ save(df_outcomes_met_psa_itt_ps,
 )
 
 # ITT - R&R SA
-save(df_outcomes_met_psa_itt_rr_sa,
-  df_outcomes_bnx_psa_itt_rr_sa,
-  df_incremental_psa_itt_rr_sa,
-  df_incremental_psa_itt_rr_sa_scaled,
-  file = "outputs/psa/outcomes_psa_itt_rr_sa.RData"
+# save(df_outcomes_met_psa_itt_rr_sa,
+#   df_outcomes_bnx_psa_itt_rr_sa,
+#   df_incremental_psa_itt_rr_sa,
+#   df_incremental_psa_itt_rr_sa_scaled,
+#   file = "outputs/psa/outcomes_psa_itt_rr_sa.RData"
+# )
+
+# ITT - R&R SA (100% Inc)
+save(df_outcomes_met_psa_itt_rr_100_inc_sa,
+  df_outcomes_bnx_psa_itt_rr_100_inc_sa,
+  df_incremental_psa_itt_rr_100_inc_sa,
+  df_incremental_psa_itt_rr_100_inc_sa_scaled,
+  file = "outputs/psa/outcomes_psa_itt_rr_100_inc_sa.RData"
+)
+
+# ITT - R&R SA (0% Inc)
+save(df_outcomes_met_psa_itt_rr_0_inc_sa,
+  df_outcomes_bnx_psa_itt_rr_0_inc_sa,
+  df_incremental_psa_itt_rr_0_inc_sa,
+  df_incremental_psa_itt_rr_0_inc_sa_scaled,
+  file = "outputs/psa/outcomes_psa_itt_rr_0_inc_sa.RData"
 )
 
 # PP - Per protocol

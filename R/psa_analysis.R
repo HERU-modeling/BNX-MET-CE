@@ -8,12 +8,41 @@
 #' df_outcomes_BNX_PSA_comb:
 #' df_incremental_PSA_comb:
 #' @export
-psa_analysis <- function(ce_est) { # choose one of three analytic scenarios ("ITT_PS"; "ITT_IV"; "PP")
+psa_analysis <- function(
+    ce_est,
+    v_init_dist_met_100_inc = NULL,
+    v_init_dist_met_0_inc = NULL,
+    v_init_dist_bnx_100_inc = NULL,
+    v_init_dist_bnx_0_inc = NULL) {
   # Initialize lists
   l_outcomes_met_psa <- list()
   l_outcomes_bnx_psa <- list()
   l_incremental_psa <- list()
   l_incremental_psa_scaled <- list()
+
+  ############################
+  #### Cohort balance R&R ####
+  ############################
+  p_inc_prev_2010 <- p_inc_prev_2011 <- p_inc_prev_2012 <- p_inc_prev_2013 <- p_inc_prev_2014 <- 0
+  p_inc_prev_2015 <- p_inc_prev_2016 <- p_inc_prev_2017 <- p_inc_prev_2018 <- p_inc_prev_2019 <- p_inc_prev_2020 <- 0
+  v_inc_prev <- c(
+    p_inc_prev_2010, p_inc_prev_2011, p_inc_prev_2012, p_inc_prev_2013, p_inc_prev_2014, p_inc_prev_2015,
+    p_inc_prev_2016, p_inc_prev_2017, p_inc_prev_2018, p_inc_prev_2019, p_inc_prev_2020
+  )
+  names(v_inc_prev) <- c(
+    "p_inc_prev_2010", "p_inc_prev_2011", "p_inc_prev_2012", "p_inc_prev_2013", "p_inc_prev_2014", "p_inc_prev_2015",
+    "p_inc_prev_2016", "p_inc_prev_2017", "p_inc_prev_2018", "p_inc_prev_2019", "p_inc_prev_2020"
+  )
+  # Create combined vector of parameters for cohort balance (set transitions from inc to prev to zero, set baseline to fixed %)
+  # if (tx == "met") {
+  v_cohort_balance_met_0_inc <- c(v_init_dist_met_0_inc, v_inc_prev)
+  v_cohort_balance_met_100_inc <- c(v_init_dist_met_100_inc, v_inc_prev)
+  # } else if (tx == "bnx") {
+  v_cohort_balance_bnx_0_inc <- c(v_init_dist_bnx_0_inc, v_inc_prev)
+  v_cohort_balance_bnx_100_inc <- c(v_init_dist_bnx_100_inc, v_inc_prev)
+  # } else {
+
+  # }
 
   if (ce_est == "itt_ps") {
     l_params_met <- l_params_met_itt
@@ -25,6 +54,20 @@ psa_analysis <- function(ce_est) { # choose one of three analytic scenarios ("IT
     l_params_bnx <- l_params_bnx_itt
     df_psa_params_met <- df_psa_params_itt_rr_sa
     df_psa_params_bnx <- df_psa_params_itt_rr_sa
+  } else if (ce_est == "itt_rr_100_inc_sa") {
+    l_params_met <- update_param_list(l_params_all = l_params_met_itt, params_updated = v_cohort_balance_met_100_inc)
+    l_params_bnx <- update_param_list(l_params_all = l_params_bnx_itt, params_updated = v_cohort_balance_bnx_100_inc)
+    # l_params_met <- l_params_met_itt
+    # l_params_bnx <- l_params_bnx_itt
+    df_psa_params_met <- df_psa_params_itt
+    df_psa_params_bnx <- df_psa_params_itt
+  } else if (ce_est == "itt_rr_0_inc_sa") {
+    l_params_met <- update_param_list(l_params_all = l_params_met_itt, params_updated = v_cohort_balance_met_0_inc)
+    l_params_bnx <- update_param_list(l_params_all = l_params_bnx_itt, params_updated = v_cohort_balance_bnx_0_inc)
+    # l_params_met <- l_params_met_itt
+    # l_params_bnx <- l_params_bnx_itt
+    df_psa_params_met <- df_psa_params_itt
+    df_psa_params_bnx <- df_psa_params_itt
   } else if (ce_est == "pp_hd") {
     l_params_met <- l_params_met_pp
     l_params_bnx <- l_params_bnx_pp
@@ -38,7 +81,8 @@ psa_analysis <- function(ce_est) { # choose one of three analytic scenarios ("IT
   } else {
     stop("Must select valid scenario")
   }
-
+  # browser()
+  # stop()
   # Run PSA blockwise
   n_runs <- nrow(df_psa_params_met) # n_sim to run entire PSA
   n_block_size <- 1000 # size of block for each loop
