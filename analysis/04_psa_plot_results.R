@@ -65,13 +65,15 @@ tbl_df_summ_inc_ly_psa_itt_ps <- df_incremental_psa_itt_ps_scaled %>%
         )
       )
     ),
-    scenario = "Initiator analysis (base-case)"
+    scenario = "Initiator (primary analysis)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
 
+# FIXME: R&R
+# OUTCOMES NOT CURRENTLY CUMULATIVE
 # Life years (BNX-ITT)
-tbl_df_summ_bnx_ly_psa_itt_ps <- df_outcomes_bnx_itt_ps_scaled %>%
+tbl_df_summ_bnx_ly_psa_itt_ps <- df_outcomes_bnx_psa_itt_ps %>%
   as_tibble() %>%
   select(
     n_qalys_2010_ann_scaled,
@@ -104,13 +106,15 @@ tbl_df_summ_bnx_ly_psa_itt_ps <- df_outcomes_bnx_itt_ps_scaled %>%
         )
       )
     ),
-    scenario = "Initiator analysis (base-case)"
+    scenario = "Initiator (BNX)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
 
+# FIXME: R&R
+# OUTCOMES NOT CURRENTLY CUMULATIVE
 # Life years (MET-ITT)
-tbl_df_summ_met_ly_psa_itt_ps <- df_outcomes_met_itt_ps_scaled %>%
+tbl_df_summ_met_ly_psa_itt_ps <- df_outcomes_met_psa_itt_ps %>%
   as_tibble() %>%
   select(
     n_qalys_2010_ann_scaled,
@@ -143,7 +147,7 @@ tbl_df_summ_met_ly_psa_itt_ps <- df_outcomes_met_itt_ps_scaled %>%
         )
       )
     ),
-    scenario = "Initiator analysis (base-case)"
+    scenario = "Initiator (methadone)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
@@ -182,7 +186,7 @@ tbl_df_summ_inc_odf_psa_itt_ps <- df_incremental_psa_itt_ps_scaled %>%
         )
       )
     ),
-    scenario = "Initiator analysis (base-case)"
+    scenario = "Initiator (primary analysis)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
@@ -221,7 +225,7 @@ tbl_df_summ_inc_odn_psa_itt_ps <- df_incremental_psa_itt_ps_scaled %>%
         )
       )
     ),
-    scenario = "Initiator analysis (base-case)"
+    scenario = "Initiator (primary analysis)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
@@ -260,7 +264,7 @@ tbl_df_summ_inc_acm_psa_itt_ps <- df_incremental_psa_itt_ps_scaled %>%
         )
       )
     ),
-    scenario = "Initiator analysis (base-case)"
+    scenario = "Initiator (primary analysis)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
@@ -308,6 +312,7 @@ tbl_df_summ_inc_acm_psa_itt_ps <- df_incremental_psa_itt_ps_scaled %>%
 #   arrange(time) %>%
 #   select(scenario, time, mean, q025, q975)
 
+# FIXME: R&R
 # 100% incident OAT
 # Life years
 tbl_df_summ_inc_ly_psa_itt_rr_100_inc_sa <- df_incremental_psa_itt_rr_100_inc_sa_scaled %>%
@@ -343,11 +348,12 @@ tbl_df_summ_inc_ly_psa_itt_rr_100_inc_sa <- df_incremental_psa_itt_rr_100_inc_sa
         )
       )
     ),
-    scenario = "Initiator analysis (100% incident OAT SA)"
+    scenario = "Initiator (100% incident OAT)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
 
+# FIXME: R&R
 # 0% incident OAT
 # Life years
 tbl_df_summ_inc_ly_psa_itt_rr_0_inc_sa <- df_incremental_psa_itt_rr_0_inc_sa_scaled %>%
@@ -383,7 +389,7 @@ tbl_df_summ_inc_ly_psa_itt_rr_0_inc_sa <- df_incremental_psa_itt_rr_0_inc_sa_sca
         )
       )
     ),
-    scenario = "Initiator analysis (0% incident OAT SA)"
+    scenario = "Initiator (100% experienced OAT)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
@@ -425,7 +431,7 @@ tbl_df_summ_inc_ly_psa_pp <- df_incremental_psa_pp_scaled %>%
         )
       )
     ),
-    scenario = "Per-protocol analysis (alternate-case)"
+    scenario = "Per-protocol (sensitivity analysis)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
@@ -464,7 +470,7 @@ tbl_df_summ_inc_odf_psa_pp <- df_incremental_psa_pp_scaled %>%
         )
       )
     ),
-    scenario = "Per-protocol analysis (alternate-case)"
+    scenario = "Per-protocol (sensitivity analysis)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
@@ -503,7 +509,7 @@ tbl_df_summ_inc_odn_psa_pp <- df_incremental_psa_pp_scaled %>%
         )
       )
     ),
-    scenario = "Per-protocol analysis (alternate-case)"
+    scenario = "Per-protocol (sensitivity analysis)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
@@ -542,7 +548,7 @@ tbl_df_summ_inc_acm_psa_pp <- df_incremental_psa_pp_scaled %>%
         )
       )
     ),
-    scenario = "Per-protocol analysis (alternate-case)"
+    scenario = "Per-protocol (sensitivity analysis)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
@@ -706,19 +712,18 @@ tbl_df_summ_inc_acm_psa_pp_hd <- df_incremental_psa_pp_hd_scaled %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
 
-# Combine
 tbl_df_summ_inc_ly_psa_comb <- rbind(tbl_df_summ_inc_ly_psa_itt_ps, tbl_df_summ_inc_ly_psa_pp, tbl_df_summ_inc_ly_psa_pp_hd)
 tbl_df_summ_inc_odf_psa_comb <- rbind(tbl_df_summ_inc_odf_psa_itt_ps, tbl_df_summ_inc_odf_psa_pp, tbl_df_summ_inc_odf_psa_pp_hd)
 tbl_df_summ_inc_odn_psa_comb <- rbind(tbl_df_summ_inc_odn_psa_itt_ps, tbl_df_summ_inc_odn_psa_pp, tbl_df_summ_inc_odn_psa_pp_hd)
 tbl_df_summ_inc_acm_psa_comb <- rbind(tbl_df_summ_inc_acm_psa_itt_ps, tbl_df_summ_inc_acm_psa_pp, tbl_df_summ_inc_acm_psa_pp_hd)
 
-tbl_df_summ_inc_ly_psa_comb_sa <- rbind(tbl_df_summ_inc_ly_psa_itt_ps, tbl_df_summ_inc_ly_psa_itt_rr_sa, tbl_df_summ_inc_ly_psa_pp, tbl_df_summ_inc_ly_psa_pp_hd)
-tbl_df_summ_inc_odf_psa_comb_sa <- rbind(tbl_df_summ_inc_odf_psa_itt_ps, tbl_df_summ_inc_odf_psa_itt_rr_sa, tbl_df_summ_inc_odf_psa_pp, tbl_df_summ_inc_odf_psa_pp_hd)
-tbl_df_summ_inc_odn_psa_comb_sa <- rbind(tbl_df_summ_inc_odn_psa_itt_ps, tbl_df_summ_inc_odn_psa_itt_rr_sa, tbl_df_summ_inc_odn_psa_pp, tbl_df_summ_inc_odn_psa_pp_hd)
-tbl_df_summ_inc_acm_psa_comb_sa <- rbind(tbl_df_summ_inc_acm_psa_itt_ps, tbl_df_summ_inc_acm_psa_itt_rr_sa, tbl_df_summ_inc_acm_psa_pp, tbl_df_summ_inc_acm_psa_pp_hd)
+# tbl_df_summ_inc_ly_psa_comb_sa <- rbind(tbl_df_summ_inc_ly_psa_itt_ps, tbl_df_summ_inc_ly_psa_itt_rr_sa, tbl_df_summ_inc_ly_psa_pp, tbl_df_summ_inc_ly_psa_pp_hd)
+# tbl_df_summ_inc_odf_psa_comb_sa <- rbind(tbl_df_summ_inc_odf_psa_itt_ps, tbl_df_summ_inc_odf_psa_itt_rr_sa, tbl_df_summ_inc_odf_psa_pp, tbl_df_summ_inc_odf_psa_pp_hd)
+# tbl_df_summ_inc_odn_psa_comb_sa <- rbind(tbl_df_summ_inc_odn_psa_itt_ps, tbl_df_summ_inc_odn_psa_itt_rr_sa, tbl_df_summ_inc_odn_psa_pp, tbl_df_summ_inc_odn_psa_pp_hd)
+# tbl_df_summ_inc_acm_psa_comb_sa <- rbind(tbl_df_summ_inc_acm_psa_itt_ps, tbl_df_summ_inc_acm_psa_itt_rr_sa, tbl_df_summ_inc_acm_psa_pp, tbl_df_summ_inc_acm_psa_pp_hd)
 
+# FIXME: R&R
 tbl_df_summ_ly_psa_comb_sa <- rbind(tbl_df_summ_bnx_ly_psa_itt_ps, tbl_df_summ_met_ly_psa_itt_ps)
-
 tbl_df_summ_ly_psa_comb_inc_prev_sa <- rbind(tbl_df_summ_inc_ly_psa_itt_ps, tbl_df_summ_inc_ly_psa_itt_rr_100_inc_sa, tbl_df_summ_inc_ly_psa_itt_rr_0_inc_sa)
 
 ## As .csv ####
@@ -746,8 +751,8 @@ write.csv(tbl_df_summ_inc_acm_psa_comb,
 tbl_df_summ_inc_ly_psa_comb$scenario <- factor(
   tbl_df_summ_inc_ly_psa_comb$scenario,
   levels = c(
-    "Initiator analysis (base-case)",
-    "Per-protocol analysis (alternate-case)",
+    "Initiator (primary analysis)",
+    "Per-protocol (sensitivity analysis)",
     "High-dose (sensitivity analysis)"
   )
 )
@@ -759,7 +764,11 @@ plot_psa_ly_scaled <- ggplot(tbl_df_summ_inc_ly_psa_comb) +
     position = position_dodge(width = .75),
     linewidth = .75
   ) +
-  scale_color_manual(values = c("#FC4C02", "#005778", "#008E97")) +
+  scale_color_manual(values = c(
+    "Initiator (primary analysis)" = "#FC4C02",
+    "Per-protocol (sensitivity analysis)" = "#005778",
+    "High-dose (sensitivity analysis)" = "#008E97"
+  )) +
   scale_linetype_manual(values = c(
     "Initiator (primary analysis)" = "solid",
     "Per-protocol (sensitivity analysis)" = "solid",
@@ -778,7 +787,7 @@ plot_psa_ly_scaled <- ggplot(tbl_df_summ_inc_ly_psa_comb) +
   guides(color = guide_legend(nrow = 2), linetype = guide_legend(nrow = 2))
 
 ggsave(plot_psa_ly_scaled,
-  filename = "plots/psa/psa-life-years-lost_scaled.png",
+  filename = "plots/psa/psa-life-years-lost-scaled.png",
   width = 8, height = 6, dpi = 350
 )
 
@@ -823,16 +832,17 @@ ggsave(plot_psa_ly_scaled,
 #   width = 8, height = 6, dpi = 350
 # )
 
+# FIXME: R&R
 # Incident prevalence sensitivity analysis plot
-tbl_df_summ_inc_ly_psa_comb_inc_prev_sa$scenario <- factor(
-  tbl_df_summ_inc_ly_psa_comb_inc_prev_sa$scenario,
+tbl_df_summ_ly_psa_comb_inc_prev_sa$scenario <- factor(
+  tbl_df_summ_ly_psa_comb_inc_prev_sa$scenario,
   levels = c(
     "Initiator (primary analysis)",
-    "Initiator (100% Incident OAT SA)",
-    "Initiator (100% Experienced OAT SA)"
+    "Initiator (100% incident OAT)",
+    "Initiator (100% experienced OAT)"
   )
 )
-plot_psa_ly_scaled_inc_prev_sa <- ggplot(tbl_df_summ_inc_ly_psa_comb_inc_prev_sa) +
+plot_psa_ly_scaled_inc_prev_sa <- ggplot(tbl_df_summ_ly_psa_comb_inc_prev_sa) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "darkgrey", linewidth = 0.75) + # NEW
   geom_pointrange(
     aes(x = time, y = mean, ymin = q025, ymax = q975, color = scenario, linetype = scenario),
@@ -842,8 +852,8 @@ plot_psa_ly_scaled_inc_prev_sa <- ggplot(tbl_df_summ_inc_ly_psa_comb_inc_prev_sa
   scale_color_manual(values = c("#FC4C02", "#005778", "#008E97")) +
   scale_linetype_manual(values = c(
     "Initiator (primary analysis)" = "solid",
-    "Initiator (100% Incident OAT SA)" = "solid",
-    "Initiator (100% Experienced OAT SA)" = "solid"
+    "Initiator (100% incident OAT)" = "solid",
+    "Initiator (100% experienced OAT)" = "solid"
   )) +
   labs(y = "Incremental life years (BNX vs. methadone)", x = "Year") +
   scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), labels = c("2010", "2012", "2014", "2016", "2018", "2020*"), limits = c(2009, 2021)) +
@@ -858,16 +868,17 @@ plot_psa_ly_scaled_inc_prev_sa <- ggplot(tbl_df_summ_inc_ly_psa_comb_inc_prev_sa
   guides(color = guide_legend(nrow = 2), linetype = guide_legend(nrow = 2))
 
 ggsave(plot_psa_ly_scaled_inc_prev_sa,
-  filename = "plots/psa/psa-life-years-lost_scaled-inc-prev-SA.png",
+  filename = "plots/psa/psa-life-years-lost_scaled-inc-prev-sa.png",
   width = 8, height = 6, dpi = 350
 )
 
+# FIXME: R&R
 # Total life years plot
 tbl_df_summ_ly_psa_comb_sa$scenario <- factor(
   tbl_df_summ_ly_psa_comb_sa$scenario,
   levels = c(
-    "BNX",
-    "Methadone"
+    "Initiator (BNX)",
+    "Initiator (methadone)"
   )
 )
 plot_psa_ly_total_scaled_sa <- ggplot(tbl_df_summ_ly_psa_comb_sa) +
@@ -878,8 +889,8 @@ plot_psa_ly_total_scaled_sa <- ggplot(tbl_df_summ_ly_psa_comb_sa) +
   ) +
   scale_color_manual(values = c("#008E97", "#005778")) +
   scale_linetype_manual(values = c(
-    "BNX" = "solid",
-    "Methadone" = "solid"
+    "Initiator (BNX)" = "solid",
+    "Initiator (methadone)" = "solid"
   )) +
   labs(y = "Total life years", x = "Year") +
   scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), labels = c("2010", "2012", "2014", "2016", "2018", "2020*"), limits = c(2009, 2021)) +
@@ -892,6 +903,12 @@ plot_psa_ly_total_scaled_sa <- ggplot(tbl_df_summ_ly_psa_comb_sa) +
     text = element_text(size = 15)
   ) +
   guides(color = guide_legend(nrow = 2), linetype = guide_legend(nrow = 2))
+
+# Save plot
+ggsave(plot_psa_ly_total_scaled_sa,
+  filename = "plots/psa/psa-life-years-total-bnx-met-sa.png",
+  width = 8, height = 6, dpi = 350
+)
 
 ###########################
 ### Fatal overdose plot ###
