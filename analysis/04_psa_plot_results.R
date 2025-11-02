@@ -867,7 +867,7 @@ plot_psa_ly_scaled_inc_prev_sa <- ggplot(tbl_df_summ_ly_psa_comb_inc_prev_sa) +
     position = position_dodge(width = .75),
     linewidth = .75
   ) +
-  scale_color_manual(values = c("#FC4C02", "#005778", "#008E97")) +
+  scale_color_manual(values = c("#FC4C02", "#d8b365", "#5ab4ac")) +
   scale_linetype_manual(values = c(
     "Initiator (primary analysis)" = "solid",
     "Initiator (100% incident OAT)" = "solid",
