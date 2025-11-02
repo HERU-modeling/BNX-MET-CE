@@ -1,3 +1,5 @@
+rm(list = ls()) # to clean the workspace
+
 library(dplyr)
 library(reshape2)
 library(ggplot2)
@@ -75,13 +77,21 @@ tbl_df_summ_inc_ly_psa_itt_ps <- df_incremental_psa_itt_ps_scaled %>%
 # Life years (BNX-ITT)
 tbl_df_summ_bnx_ly_psa_itt_ps <- df_outcomes_bnx_psa_itt_ps %>%
   as_tibble() %>%
+  mutate(
+    n_qalys_2010_cum_scaled = n_qalys_2010_ann_scaled,
+    n_qalys_2012_cum_scaled = n_qalys_2010_cum_scaled + n_qalys_2011_ann_scaled + n_qalys_2012_ann_scaled,
+    n_qalys_2014_cum_scaled = n_qalys_2012_cum_scaled + n_qalys_2013_ann_scaled + n_qalys_2014_ann_scaled,
+    n_qalys_2016_cum_scaled = n_qalys_2014_cum_scaled + n_qalys_2015_ann_scaled + n_qalys_2016_ann_scaled,
+    n_qalys_2018_cum_scaled = n_qalys_2016_cum_scaled + n_qalys_2017_ann_scaled + n_qalys_2018_ann_scaled,
+    n_qalys_2020_cum_scaled = n_qalys_2018_cum_scaled + n_qalys_2019_ann_scaled + n_qalys_2020_ann_scaled
+  ) %>%
   select(
-    n_qalys_2010_ann_scaled,
-    n_qalys_2012_ann_scaled,
-    n_qalys_2014_ann_scaled,
-    n_qalys_2016_ann_scaled,
-    n_qalys_2018_ann_scaled,
-    n_qalys_2020_ann_scaled
+    n_qalys_2010_cum_scaled,
+    n_qalys_2012_cum_scaled,
+    n_qalys_2014_cum_scaled,
+    n_qalys_2016_cum_scaled,
+    n_qalys_2018_cum_scaled,
+    n_qalys_2020_cum_scaled
   ) %>%
   gather("variable", "value") %>%
   group_by(variable) %>%
@@ -95,12 +105,12 @@ tbl_df_summ_bnx_ly_psa_itt_ps <- df_outcomes_bnx_psa_itt_ps %>%
     max = max(value)
   ) %>%
   mutate(
-    time = ifelse(variable == "n_qalys_2010_ann_scaled", 2010,
-      ifelse(variable == "n_qalys_2012_ann_scaled", 2012,
-        ifelse(variable == "n_qalys_2014_ann_scaled", 2014,
-          ifelse(variable == "n_qalys_2016_ann_scaled", 2016,
-            ifelse(variable == "n_qalys_2018_ann_scaled", 2018,
-              ifelse(variable == "n_qalys_2020_ann_scaled", 2020, NA)
+    time = ifelse(variable == "n_qalys_2010_cum_scaled", 2010,
+      ifelse(variable == "n_qalys_2012_cum_scaled", 2012,
+        ifelse(variable == "n_qalys_2014_cum_scaled", 2014,
+          ifelse(variable == "n_qalys_2016_cum_scaled", 2016,
+            ifelse(variable == "n_qalys_2018_cum_scaled", 2018,
+              ifelse(variable == "n_qalys_2020_cum_scaled", 2020, NA)
             )
           )
         )
@@ -116,13 +126,21 @@ tbl_df_summ_bnx_ly_psa_itt_ps <- df_outcomes_bnx_psa_itt_ps %>%
 # Life years (MET-ITT)
 tbl_df_summ_met_ly_psa_itt_ps <- df_outcomes_met_psa_itt_ps %>%
   as_tibble() %>%
+  mutate(
+    n_qalys_2010_cum_scaled = n_qalys_2010_ann_scaled,
+    n_qalys_2012_cum_scaled = n_qalys_2010_cum_scaled + n_qalys_2011_ann_scaled + n_qalys_2012_ann_scaled,
+    n_qalys_2014_cum_scaled = n_qalys_2012_cum_scaled + n_qalys_2013_ann_scaled + n_qalys_2014_ann_scaled,
+    n_qalys_2016_cum_scaled = n_qalys_2014_cum_scaled + n_qalys_2015_ann_scaled + n_qalys_2016_ann_scaled,
+    n_qalys_2018_cum_scaled = n_qalys_2016_cum_scaled + n_qalys_2017_ann_scaled + n_qalys_2018_ann_scaled,
+    n_qalys_2020_cum_scaled = n_qalys_2018_cum_scaled + n_qalys_2019_ann_scaled + n_qalys_2020_ann_scaled
+  ) %>%
   select(
-    n_qalys_2010_ann_scaled,
-    n_qalys_2012_ann_scaled,
-    n_qalys_2014_ann_scaled,
-    n_qalys_2016_ann_scaled,
-    n_qalys_2018_ann_scaled,
-    n_qalys_2020_ann_scaled
+    n_qalys_2010_cum_scaled,
+    n_qalys_2012_cum_scaled,
+    n_qalys_2014_cum_scaled,
+    n_qalys_2016_cum_scaled,
+    n_qalys_2018_cum_scaled,
+    n_qalys_2020_cum_scaled
   ) %>%
   gather("variable", "value") %>%
   group_by(variable) %>%
@@ -136,12 +154,12 @@ tbl_df_summ_met_ly_psa_itt_ps <- df_outcomes_met_psa_itt_ps %>%
     max = max(value)
   ) %>%
   mutate(
-    time = ifelse(variable == "n_qalys_2010_ann_scaled", 2010,
-      ifelse(variable == "n_qalys_2012_ann_scaled", 2012,
-        ifelse(variable == "n_qalys_2014_ann_scaled", 2014,
-          ifelse(variable == "n_qalys_2016_ann_scaled", 2016,
-            ifelse(variable == "n_qalys_2018_ann_scaled", 2018,
-              ifelse(variable == "n_qalys_2020_ann_scaled", 2020, NA)
+    time = ifelse(variable == "n_qalys_2010_cum_scaled", 2010,
+      ifelse(variable == "n_qalys_2012_cum_scaled", 2012,
+        ifelse(variable == "n_qalys_2014_cum_scaled", 2014,
+          ifelse(variable == "n_qalys_2016_cum_scaled", 2016,
+            ifelse(variable == "n_qalys_2018_cum_scaled", 2018,
+              ifelse(variable == "n_qalys_2020_cum_scaled", 2020, NA)
             )
           )
         )
