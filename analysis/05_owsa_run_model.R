@@ -83,9 +83,9 @@ v_owsa_met_itt_ps_high <- l_owsa_met_itt_ps$v_owsa_high
 v_owsa_met_pp_low <- l_owsa_met_pp$v_owsa_low
 v_owsa_met_pp_high <- l_owsa_met_pp$v_owsa_high
 # Cohort balance (same for ITT and PP)
-v_owsa_met_cohort_balance_25_inc <- l_owsa_met_itt_ps$v_cohort_balance_25_inc
-v_owsa_met_cohort_balance_50_inc <- l_owsa_met_itt_ps$v_cohort_balance_50_inc
-v_owsa_met_cohort_balance_75_inc <- l_owsa_met_itt_ps$v_cohort_balance_75_inc
+# v_owsa_met_cohort_balance_25_inc <- l_owsa_met_itt_ps$v_cohort_balance_25_inc
+# v_owsa_met_cohort_balance_50_inc <- l_owsa_met_itt_ps$v_cohort_balance_50_inc
+# v_owsa_met_cohort_balance_75_inc <- l_owsa_met_itt_ps$v_cohort_balance_75_inc
 
 # BNX
 # ITT
@@ -95,9 +95,9 @@ v_owsa_bnx_itt_ps_high <- l_owsa_bnx_itt_ps$v_owsa_high
 v_owsa_bnx_pp_low <- l_owsa_bnx_pp$v_owsa_low
 v_owsa_bnx_pp_high <- l_owsa_bnx_pp$v_owsa_high
 # Cohort balance (same for ITT and PP)
-v_owsa_bnx_cohort_balance_25_inc <- l_owsa_bnx_itt_ps$v_cohort_balance_25_inc
-v_owsa_bnx_cohort_balance_50_inc <- l_owsa_bnx_itt_ps$v_cohort_balance_50_inc
-v_owsa_bnx_cohort_balance_75_inc <- l_owsa_bnx_itt_ps$v_cohort_balance_75_inc
+# v_owsa_bnx_cohort_balance_25_inc <- l_owsa_bnx_itt_ps$v_cohort_balance_25_inc
+# v_owsa_bnx_cohort_balance_50_inc <- l_owsa_bnx_itt_ps$v_cohort_balance_50_inc
+# v_owsa_bnx_cohort_balance_75_inc <- l_owsa_bnx_itt_ps$v_cohort_balance_75_inc
 
 #### Run model ####
 
@@ -123,35 +123,35 @@ n_base_pp <- c(l_inc_base_pp$df_incremental_scaled$n_inc_qalys_adj_2020_scaled)
 ########################
 ## ITT-PS
 # 25% Incident
-l_out_bnx_cohort_balance_25_inc_itt_ps <- outcomes(l_params_all = l_params_bnx_itt, v_params_calib = l_imis_output_itt$v_calib_post_mean, v_params_dsa = v_owsa_bnx_cohort_balance_25_inc, time_horizon = "full", ce_est = "itt_ps", analytic_cohort = "bnx_only", checks = FALSE)
-l_out_met_cohort_balance_25_inc_itt_ps <- outcomes(l_params_all = l_params_met_itt, v_params_calib = l_imis_output_itt$v_calib_post_mean, v_params_dsa = v_owsa_met_cohort_balance_25_inc, time_horizon = "full", ce_est = "itt_ps", analytic_cohort = "met_only", checks = FALSE)
-l_inc_cohort_balance_25_inc_itt_ps <- inc_outcomes(outcomes_comp = l_out_met_cohort_balance_25_inc_itt_ps, outcomes_int = l_out_bnx_cohort_balance_25_inc_itt_ps)
+# l_out_bnx_cohort_balance_25_inc_itt_ps <- outcomes(l_params_all = l_params_bnx_itt, v_params_calib = l_imis_output_itt$v_calib_post_mean, v_params_dsa = v_owsa_bnx_cohort_balance_25_inc, time_horizon = "full", ce_est = "itt_ps", analytic_cohort = "bnx_only", checks = FALSE)
+# l_out_met_cohort_balance_25_inc_itt_ps <- outcomes(l_params_all = l_params_met_itt, v_params_calib = l_imis_output_itt$v_calib_post_mean, v_params_dsa = v_owsa_met_cohort_balance_25_inc, time_horizon = "full", ce_est = "itt_ps", analytic_cohort = "met_only", checks = FALSE)
+# l_inc_cohort_balance_25_inc_itt_ps <- inc_outcomes(outcomes_comp = l_out_met_cohort_balance_25_inc_itt_ps, outcomes_int = l_out_bnx_cohort_balance_25_inc_itt_ps)
 # 50% Incident
 # l_out_bnx_cohort_balance_50_inc_itt_ps <- outcomes(l_params_all = l_params_bnx_itt, v_params_calib = l_imis_output_itt$v_calib_post_mean, v_params_dsa = v_owsa_bnx_cohort_balance_50_inc, time_horizon = "full", ce_est = "itt_ps", analytic_cohort = "bnx_only", checks = FALSE)
 # l_out_met_cohort_balance_50_inc_itt_ps <- outcomes(l_params_all = l_params_met_itt, v_params_calib = l_imis_output_itt$v_calib_post_mean, v_params_dsa = v_owsa_met_cohort_balance_50_inc, time_horizon = "full", ce_est = "itt_ps", analytic_cohort = "met_only", checks = FALSE)
 # l_inc_cohort_balance_50_inc_itt_ps <- inc_outcomes(outcomes_comp = l_out_met_cohort_balance_50_inc_itt_ps, outcomes_int = l_out_bnx_cohort_balance_50_inc_itt_ps)
 # 75% Incident
-l_out_bnx_cohort_balance_75_inc_itt_ps <- outcomes(l_params_all = l_params_bnx_itt, v_params_calib = l_imis_output_itt$v_calib_post_mean, v_params_dsa = v_owsa_bnx_cohort_balance_75_inc, time_horizon = "full", ce_est = "itt_ps", analytic_cohort = "bnx_only", checks = FALSE)
-l_out_met_cohort_balance_75_inc_itt_ps <- outcomes(l_params_all = l_params_met_itt, v_params_calib = l_imis_output_itt$v_calib_post_mean, v_params_dsa = v_owsa_met_cohort_balance_75_inc, time_horizon = "full", ce_est = "itt_ps", analytic_cohort = "met_only", checks = FALSE)
-l_inc_cohort_balance_75_inc_itt_ps <- inc_outcomes(outcomes_comp = l_out_met_cohort_balance_75_inc_itt_ps, outcomes_int = l_out_bnx_cohort_balance_75_inc_itt_ps)
+# l_out_bnx_cohort_balance_75_inc_itt_ps <- outcomes(l_params_all = l_params_bnx_itt, v_params_calib = l_imis_output_itt$v_calib_post_mean, v_params_dsa = v_owsa_bnx_cohort_balance_75_inc, time_horizon = "full", ce_est = "itt_ps", analytic_cohort = "bnx_only", checks = FALSE)
+# l_out_met_cohort_balance_75_inc_itt_ps <- outcomes(l_params_all = l_params_met_itt, v_params_calib = l_imis_output_itt$v_calib_post_mean, v_params_dsa = v_owsa_met_cohort_balance_75_inc, time_horizon = "full", ce_est = "itt_ps", analytic_cohort = "met_only", checks = FALSE)
+# l_inc_cohort_balance_75_inc_itt_ps <- inc_outcomes(outcomes_comp = l_out_met_cohort_balance_75_inc_itt_ps, outcomes_int = l_out_bnx_cohort_balance_75_inc_itt_ps)
 # Combine
-v_cohort_balance_itt_ps <- c(l_inc_cohort_balance_75_inc_itt_ps$df_incremental_scaled$n_inc_qalys_adj_2020_scaled, l_inc_cohort_balance_25_inc_itt_ps$df_incremental_scaled$n_inc_qalys_adj_2020_scaled)
+# v_cohort_balance_itt_ps <- c(l_inc_cohort_balance_75_inc_itt_ps$df_incremental_scaled$n_inc_qalys_adj_2020_scaled, l_inc_cohort_balance_25_inc_itt_ps$df_incremental_scaled$n_inc_qalys_adj_2020_scaled)
 
 ## PP
 # 25% Incident
-l_out_bnx_cohort_balance_25_inc_pp <- outcomes(l_params_all = l_params_bnx_pp, v_params_calib = l_imis_output_pp$v_calib_post_mean, v_params_dsa = v_owsa_bnx_cohort_balance_25_inc, time_horizon = "full", ce_est = "pp", analytic_cohort = "bnx_only", checks = FALSE)
-l_out_met_cohort_balance_25_inc_pp <- outcomes(l_params_all = l_params_met_pp, v_params_calib = l_imis_output_pp$v_calib_post_mean, v_params_dsa = v_owsa_met_cohort_balance_25_inc, time_horizon = "full", ce_est = "pp", analytic_cohort = "met_only", checks = FALSE)
-l_inc_cohort_balance_25_inc_pp <- inc_outcomes(outcomes_comp = l_out_met_cohort_balance_25_inc_pp, outcomes_int = l_out_bnx_cohort_balance_25_inc_pp)
+# l_out_bnx_cohort_balance_25_inc_pp <- outcomes(l_params_all = l_params_bnx_pp, v_params_calib = l_imis_output_pp$v_calib_post_mean, v_params_dsa = v_owsa_bnx_cohort_balance_25_inc, time_horizon = "full", ce_est = "pp", analytic_cohort = "bnx_only", checks = FALSE)
+# l_out_met_cohort_balance_25_inc_pp <- outcomes(l_params_all = l_params_met_pp, v_params_calib = l_imis_output_pp$v_calib_post_mean, v_params_dsa = v_owsa_met_cohort_balance_25_inc, time_horizon = "full", ce_est = "pp", analytic_cohort = "met_only", checks = FALSE)
+# l_inc_cohort_balance_25_inc_pp <- inc_outcomes(outcomes_comp = l_out_met_cohort_balance_25_inc_pp, outcomes_int = l_out_bnx_cohort_balance_25_inc_pp)
 # 50% Incident
 # l_out_bnx_cohort_balance_50_inc_pp <- outcomes(l_params_all = l_params_bnx_pp, v_params_calib = l_imis_output_pp$v_calib_post_mean, v_params_dsa = v_owsa_bnx_cohort_balance_50_inc, time_horizon = "full", ce_est = "pp", analytic_cohort = "bnx_only", checks = FALSE)
 # l_out_met_cohort_balance_50_inc_pp <- outcomes(l_params_all = l_params_met_pp, v_params_calib = l_imis_output_pp$v_calib_post_mean, v_params_dsa = v_owsa_met_cohort_balance_50_inc, time_horizon = "full", ce_est = "pp", analytic_cohort = "met_only", checks = FALSE)
 # l_inc_cohort_balance_50_inc_pp <- inc_outcomes(outcomes_comp = l_out_met_cohort_balance_50_inc_pp, outcomes_int = l_out_bnx_cohort_balance_50_inc_pp)
 # 75% Incident
-l_out_bnx_cohort_balance_75_inc_pp <- outcomes(l_params_all = l_params_bnx_pp, v_params_calib = l_imis_output_pp$v_calib_post_mean, v_params_dsa = v_owsa_bnx_cohort_balance_75_inc, time_horizon = "full", ce_est = "pp", analytic_cohort = "bnx_only", checks = FALSE)
-l_out_met_cohort_balance_75_inc_pp <- outcomes(l_params_all = l_params_met_pp, v_params_calib = l_imis_output_pp$v_calib_post_mean, v_params_dsa = v_owsa_met_cohort_balance_75_inc, time_horizon = "full", ce_est = "pp", analytic_cohort = "met_only", checks = FALSE)
-l_inc_cohort_balance_75_inc_pp <- inc_outcomes(outcomes_comp = l_out_met_cohort_balance_75_inc_pp, outcomes_int = l_out_bnx_cohort_balance_75_inc_pp)
+# l_out_bnx_cohort_balance_75_inc_pp <- outcomes(l_params_all = l_params_bnx_pp, v_params_calib = l_imis_output_pp$v_calib_post_mean, v_params_dsa = v_owsa_bnx_cohort_balance_75_inc, time_horizon = "full", ce_est = "pp", analytic_cohort = "bnx_only", checks = FALSE)
+# l_out_met_cohort_balance_75_inc_pp <- outcomes(l_params_all = l_params_met_pp, v_params_calib = l_imis_output_pp$v_calib_post_mean, v_params_dsa = v_owsa_met_cohort_balance_75_inc, time_horizon = "full", ce_est = "pp", analytic_cohort = "met_only", checks = FALSE)
+# l_inc_cohort_balance_75_inc_pp <- inc_outcomes(outcomes_comp = l_out_met_cohort_balance_75_inc_pp, outcomes_int = l_out_bnx_cohort_balance_75_inc_pp)
 # Combine
-v_cohort_balance_pp <- c(l_inc_cohort_balance_75_inc_pp$df_incremental_scaled$n_inc_qalys_adj_2020_scaled, l_inc_cohort_balance_25_inc_pp$df_incremental_scaled$n_inc_qalys_adj_2020_scaled)
+# v_cohort_balance_pp <- c(l_inc_cohort_balance_75_inc_pp$df_incremental_scaled$n_inc_qalys_adj_2020_scaled, l_inc_cohort_balance_25_inc_pp$df_incremental_scaled$n_inc_qalys_adj_2020_scaled)
 
 ############################
 #### Non-overdose death ####
@@ -721,7 +721,7 @@ v_weibull_scale_met_prev_pp <- c(l_inc_weibull_scale_met_prev_low_pp$df_incremen
 # Combine into matrix
 # ITT-PS
 m_owsa_itt_ps <- rbind(
-  v_cohort_balance_itt_ps,
+  # v_cohort_balance_itt_ps,
   v_dno_ou_oat_itt_ps, v_abs_od_itt_ps, v_ou_od_mult_itt_ps, v_ou_oat_odn_mult_itt_ps, v_ou_oat_odf_mult_itt_ps,
   v_hr_tx_inc_itt_ps, v_hr_death_inc_itt_ps, v_hr_tx_prev_itt_ps, v_hr_death_prev_itt_ps,
   v_oat_od_itt_ps, v_fent_prev_od_mult_itt_ps, v_fent_delta_od_mult_itt_ps, v_fatal_od_oat_itt_ps, v_hr_oat_itt_ps, v_weibull_scale_ou_itt_ps, v_weibull_shape_ou_itt_ps, v_weibull_scale_abs_itt_ps, v_weibull_shape_abs_itt_ps,
@@ -729,7 +729,7 @@ m_owsa_itt_ps <- rbind(
 )
 # PP
 m_owsa_pp <- rbind(
-  v_cohort_balance_pp,
+  # v_cohort_balance_pp,
   v_dno_ou_oat_pp, v_abs_od_pp, v_ou_od_mult_pp, v_ou_oat_odn_mult_pp, v_ou_oat_odf_mult_pp,
   v_hr_tx_inc_pp, v_hr_death_inc_pp, v_hr_tx_prev_pp, v_hr_death_prev_pp,
   v_oat_od_pp, v_fent_prev_od_mult_pp, v_fent_delta_od_mult_pp, v_fatal_od_oat_pp, v_hr_oat_pp, v_weibull_scale_ou_pp, v_weibull_shape_ou_pp, v_weibull_scale_abs_pp, v_weibull_shape_abs_pp,
@@ -740,16 +740,16 @@ df_owsa_itt_ps <- as.data.frame(m_owsa_itt_ps)
 df_owsa_pp <- as.data.frame(m_owsa_pp)
 colnames(df_owsa_itt_ps) <- colnames(df_owsa_pp) <- c("Lower", "Upper")
 df_owsa_itt_ps <- as_tibble(df_owsa_itt_ps) %>% add_column(var_name = c(
-  "Cohort balance (percentage incident users)",
+  # "Cohort balance (percentage incident users)",
   "RR non-overdose death (out-of-treatment vs. OAT)",
   "Overdose rate (abstinence)",
   "RR overdose (1st week out-of-treatment vs. week 2+)",
   "RR overdose (out-of-treatment vs. OAT)",
   "RR fatal overdose (out-of-treatment vs. OAT)",
-  "CE-HR treatment discontinuation (incident users)",
-  "CE-HR mortality (incident users)",
-  "CE-HR treatment discontinuation (experienced users)",
-  "CE-HR mortality (experienced users)",
+  "HR treatment discontinuation (incident users)",
+  "HR mortality (incident users)",
+  "HR treatment discontinuation (experienced users)",
+  "HR mortality (experienced users)",
   "Overdose rate (OAT)",
   "Overdose rate multiplier (fentanyl prevalence)",
   "Overdose rate multiplier (fentanyl delta)",
@@ -765,16 +765,16 @@ df_owsa_itt_ps <- as_tibble(df_owsa_itt_ps) %>% add_column(var_name = c(
   "Weibull shape (methadone - experienced users)"
 ))
 df_owsa_pp <- as_tibble(df_owsa_pp) %>% add_column(var_name = c(
-  "Cohort balance (percentage incident users)",
+  # "Cohort balance (percentage incident users)",
   "RR non-overdose death (out-of-treatment vs. OAT)",
   "Overdose rate (abstinence)",
   "RR overdose (1st week out-of-treatment vs. week 2+)",
   "RR overdose (out-of-treatment vs. OAT)",
   "RR fatal overdose (out-of-treatment vs. OAT)",
-  "CE-HR treatment discontinuation (incident users)",
-  "CE-HR mortality (incident users)",
-  "CE-HR treatment discontinuation (experienced users)",
-  "CE-HR mortality (experienced users)",
+  "HR treatment discontinuation (incident users)",
+  "HR mortality (incident users)",
+  "HR treatment discontinuation (experienced users)",
+  "HR mortality (experienced users)",
   "Overdose rate (OAT)",
   "Overdose rate multiplier (fentanyl prevalence)",
   "Overdose rate multiplier (fentanyl delta)",
