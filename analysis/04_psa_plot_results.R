@@ -793,7 +793,7 @@ plot_psa_ly_scaled <- ggplot(tbl_df_summ_inc_ly_psa_comb) +
     "High-dose (sensitivity analysis)" = "solid"
   )) +
   labs(y = "Incremental life years (BNX vs. methadone)", x = "Year") +
-  scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), labels = c("2010", "2012", "2014", "2016", "2018", "2020*"), limits = c(2009, 2021)) +
+  scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), labels = c("2010", "2012", "2014", "2016", "2018", "2020"), limits = c(2009, 2021)) +
   theme(
     panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"),
     legend.key = element_rect(fill = "transparent", colour = "transparent"),
@@ -807,6 +807,10 @@ plot_psa_ly_scaled <- ggplot(tbl_df_summ_inc_ly_psa_comb) +
 ggsave(plot_psa_ly_scaled,
   filename = "plots/psa/psa-life-years-lost-scaled.png",
   width = 8, height = 6, dpi = 350
+)
+ggsave(plot_psa_ly_scaled,
+  filename = "plots/psa/psa-life-years-lost-scaled.pdf",
+  width = 8, height = 6
 )
 
 # Sensitivity analysis plot
@@ -834,7 +838,7 @@ ggsave(plot_psa_ly_scaled,
 #     "High-dose (sensitivity analysis)" = "solid"
 #   )) +
 #   labs(y = "Incremental life years (BNX vs. methadone)", x = "Year") +
-#   scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), labels = c("2010", "2012", "2014", "2016", "2018", "2020*"), limits = c(2009, 2021)) +
+#   scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), labels = c("2010", "2012", "2014", "2016", "2018", "2020"), limits = c(2009, 2021)) +
 #   theme(
 #     panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"),
 #     legend.key = element_rect(fill = "transparent", colour = "transparent"),
@@ -874,7 +878,7 @@ plot_psa_ly_scaled_inc_prev_sa <- ggplot(tbl_df_summ_ly_psa_comb_inc_prev_sa) +
     "Initiator (100% experienced OAT)" = "solid"
   )) +
   labs(y = "Incremental life years (BNX vs. methadone)", x = "Year") +
-  scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), labels = c("2010", "2012", "2014", "2016", "2018", "2020*"), limits = c(2009, 2021)) +
+  scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), labels = c("2010", "2012", "2014", "2016", "2018", "2020"), limits = c(2009, 2021)) +
   theme(
     panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"),
     legend.key = element_rect(fill = "transparent", colour = "transparent"),
@@ -911,7 +915,7 @@ plot_psa_ly_total_scaled_sa <- ggplot(tbl_df_summ_ly_psa_comb_sa) +
     "Initiator (methadone)" = "solid"
   )) +
   labs(y = "Total life years", x = "Year") +
-  scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), labels = c("2010", "2012", "2014", "2016", "2018", "2020*"), limits = c(2009, 2021)) +
+  scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), labels = c("2010", "2012", "2014", "2016", "2018", "2020"), limits = c(2009, 2021)) +
   theme(
     panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"),
     legend.key = element_rect(fill = "transparent", colour = "transparent"),
@@ -941,7 +945,7 @@ plot_psa_odf_scaled <- ggplot(tbl_df_summ_inc_odf_psa_comb) +
   ) +
   scale_color_manual(values = c("#FC4C02", "#005778", "#008E97")) + # NEW
   labs(y = "Fatal overdoses (BNX vs. methadone)", x = "Year") +
-  scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), labels = c("2010", "2012", "2014", "2016", "2018", "2020*"), limits = c(2009, 2021)) +
+  scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), labels = c("2010", "2012", "2014", "2016", "2018", "2020"), limits = c(2009, 2021)) +
   theme(
     panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"),
     legend.key = element_rect(fill = "transparent", colour = "transparent"),
@@ -969,7 +973,7 @@ plot_psa_odn_scaled <- ggplot(tbl_df_summ_inc_odn_psa_comb) +
   ) +
   scale_color_manual(values = c("#FC4C02", "#005778", "#008E97")) + # NEW
   labs(y = "Non-fatal overdoses (BNX vs. methadone)", x = "Year") +
-  scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), labels = c("2010", "2012", "2014", "2016", "2018", "2020*"), limits = c(2009, 2021)) +
+  scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), labels = c("2010", "2012", "2014", "2016", "2018", "2020"), limits = c(2009, 2021)) +
   theme(
     panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"),
     legend.key = element_rect(fill = "transparent", colour = "transparent"),
@@ -997,7 +1001,7 @@ plot_psa_acm_scaled <- ggplot(tbl_df_summ_inc_acm_psa_comb) +
   ) +
   scale_color_manual(values = c("#FC4C02", "#005778", "#008E97")) + # NEW
   labs(y = "All-cause deaths (BNX vs. methadone)", x = "Year") +
-  scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), labels = c("2010", "2012", "2014", "2016", "2018", "2020*"), limits = c(2009, 2021)) +
+  scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), labels = c("2010", "2012", "2014", "2016", "2018", "2020"), limits = c(2009, 2021)) +
   theme(
     panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"),
     legend.key = element_rect(fill = "transparent", colour = "transparent"),

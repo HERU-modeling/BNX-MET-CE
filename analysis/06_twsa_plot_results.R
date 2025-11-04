@@ -65,7 +65,7 @@ plot_twsa_itt_ps_ly <- ggplot(df_twsa_itt_ps_scaled, aes(x = perc_improvement_tx
     colours = c("#FF0000", "#FFFFCC", "#075AFF"),
     limits = c(-4000, 4000),
     breaks = c(-4000, 0, 4000),
-    labels = c("Favours methadone", "Scenarios equal", "Favours BNX"),
+    labels = c("Favors methadone", "Scenarios equal", "Favors BNX"),
     guide = guide_colourbar(
       direction = "horizontal",
       title = NULL
@@ -99,4 +99,8 @@ plot_twsa_itt_ps_ly <- ggplot(df_twsa_itt_ps_scaled, aes(x = perc_improvement_tx
 ggsave(plot_twsa_itt_ps_ly,
   filename = "plots/dsa/twsa/twsa_itt_ps_ly.png",
   width = 6, height = 6, dpi = 600
+)
+ggsave(plot_twsa_itt_ps_ly,
+  filename = "plots/dsa/twsa/twsa_itt_ps_ly.pdf",
+  width = 6, height = 6
 )

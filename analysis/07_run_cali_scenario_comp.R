@@ -258,7 +258,7 @@ plot_fit_acm_itt <- p_temp_acm_itt + labs(title = NULL, x = "Year", y = "All-cau
   scale_color_manual(values = c("#4B92DB", "#0C2340", "#C8102E")) +
   scale_x_continuous(
     breaks = l_cali_targets$df_acm$time,
-    labels = c("2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020*")
+    labels = c("2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020")
   ) +
   scale_y_continuous(
     breaks = c(100, 200, 300, 400, 500),
@@ -286,7 +286,7 @@ plot_fit_odf_leg <- p_temp_odf_itt + labs(title = NULL, x = "Year", y = "Fatal o
   scale_color_manual(values = c("#4B92DB", "#0C2340", "#C8102E")) +
   scale_x_continuous(
     breaks = l_cali_targets$df_odf$time,
-    labels = c("2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020*")
+    labels = c("2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020")
   )
 # Code to extract legend from plots
 g_legend <- function(a.gplot) {
@@ -305,5 +305,9 @@ plot_fit_comb_itt <- grid.arrange(arrangeGrob(plot_fit_odf_itt, plot_fit_acm_itt
 )
 ggsave(plot_fit_comb_itt,
   filename = "plots/psa/model_output_target_itt.png",
+  width = 6, height = 6
+)
+ggsave(plot_fit_comb_itt,
+  filename = "plots/psa/model_output_target_itt.pdf",
   width = 6, height = 6
 )
