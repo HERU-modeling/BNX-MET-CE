@@ -40,9 +40,20 @@ tbl_df_inc_ly_psa_itt_ps <- df_incremental_psa_itt_ps_scaled %>%
     sim_ly_2000_2020 = ifelse((n_ly_scaled_2020 <= -2000), 1, 0),
     sim_ly_2500_2020 = ifelse((n_ly_scaled_2020 <= -2500), 1, 0),
     sim_ly_3000_2020 = ifelse((n_ly_scaled_2020 <= -3000), 1, 0)
-  ) %>%
+  )
+
+# Extract means
+tbl_df_inc_ly_psa_itt_ps_means <- tbl_df_inc_ly_psa_itt_ps %>%
   select(sim_ly_0_2020, sim_ly_500_2020, sim_ly_1000_2020, sim_ly_1500_2020, sim_ly_2000_2020, sim_ly_2500_2020, sim_ly_3000_2020) %>%
   summarise_all(mean)
+
+# Extract counts
+tbl_df_inc_ly_psa_itt_ps_counts <- tbl_df_inc_ly_psa_itt_ps %>%
+  select(sim_ly_0_2020, sim_ly_500_2020, sim_ly_1000_2020, sim_ly_1500_2020, sim_ly_2000_2020, sim_ly_2500_2020, sim_ly_3000_2020) %>%
+  summarise_all(sum)
+
+# Combine means and counts in two rows
+tbl_df_inc_ly_psa_itt_ps <- rbind(tbl_df_inc_ly_psa_itt_ps_means, tbl_df_inc_ly_psa_itt_ps_counts)
 
 ##########
 ### PP ###
@@ -66,9 +77,20 @@ tbl_df_inc_ly_psa_pp <- df_incremental_psa_pp_scaled %>%
     sim_ly_2000_2020 = ifelse((n_ly_scaled_2020 <= -2000), 1, 0),
     sim_ly_2500_2020 = ifelse((n_ly_scaled_2020 <= -2500), 1, 0),
     sim_ly_3000_2020 = ifelse((n_ly_scaled_2020 <= -3000), 1, 0)
-  ) %>%
+  )
+
+# Extract means
+tbl_df_inc_ly_psa_pp_means <- tbl_df_inc_ly_psa_pp %>%
   select(sim_ly_0_2020, sim_ly_500_2020, sim_ly_1000_2020, sim_ly_1500_2020, sim_ly_2000_2020, sim_ly_2500_2020, sim_ly_3000_2020) %>%
   summarise_all(mean)
+
+# Extract counts
+tbl_df_inc_ly_psa_pp_counts <- tbl_df_inc_ly_psa_pp %>%
+  select(sim_ly_0_2020, sim_ly_500_2020, sim_ly_1000_2020, sim_ly_1500_2020, sim_ly_2000_2020, sim_ly_2500_2020, sim_ly_3000_2020) %>%
+  summarise_all(sum)
+
+# Combine means and counts in two rows
+tbl_df_inc_ly_psa_pp <- rbind(tbl_df_inc_ly_psa_pp_means, tbl_df_inc_ly_psa_pp_counts)
 
 ######################
 ### PP (high dose) ###
@@ -92,12 +114,24 @@ tbl_df_inc_ly_psa_pp_hd <- df_incremental_psa_pp_hd_scaled %>%
     sim_ly_2000_2020 = ifelse((n_ly_scaled_2020 <= -2000), 1, 0),
     sim_ly_2500_2020 = ifelse((n_ly_scaled_2020 <= -2500), 1, 0),
     sim_ly_3000_2020 = ifelse((n_ly_scaled_2020 <= -3000), 1, 0)
-  ) %>%
+  )
+
+# Extract means
+tbl_df_inc_ly_psa_pp_hd_means <- tbl_df_inc_ly_psa_pp_hd %>%
   select(sim_ly_0_2020, sim_ly_500_2020, sim_ly_1000_2020, sim_ly_1500_2020, sim_ly_2000_2020, sim_ly_2500_2020, sim_ly_3000_2020) %>%
   summarise_all(mean)
 
+# Extract counts
+tbl_df_inc_ly_psa_pp_hd_counts <- tbl_df_inc_ly_psa_pp_hd %>%
+  select(sim_ly_0_2020, sim_ly_500_2020, sim_ly_1000_2020, sim_ly_1500_2020, sim_ly_2000_2020, sim_ly_2500_2020, sim_ly_3000_2020) %>%
+  summarise_all(sum)
+
+# Combine means and counts in two rows
+tbl_df_inc_ly_psa_pp_hd <- rbind(tbl_df_inc_ly_psa_pp_hd_means, tbl_df_inc_ly_psa_pp_hd_counts)
+
 tbl_df_inc_ly_psa <- rbind(tbl_df_inc_ly_psa_itt_ps, tbl_df_inc_ly_psa_pp, tbl_df_inc_ly_psa_pp_hd)
-row_names <- c("ITT-PS", "PP", "PP-HD")
+row_names <- c("ITT-PS_mean", "ITT-PS_count", "PP_mean", "PP_count", "PP-HD_mean", "PP-HD_count")
+tbl_df_inc_ly_psa <- as.data.frame(tbl_df_inc_ly_psa)
 rownames(tbl_df_inc_ly_psa) <- row_names
 write.csv(tbl_df_inc_ly_psa,
   file = "outputs/psa/perc_sim_ly.csv",
