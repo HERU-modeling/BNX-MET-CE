@@ -1,3 +1,5 @@
+rm(list = ls()) # to clean the workspace
+
 library(dplyr)
 library(reshape2)
 library(ggplot2)
@@ -13,10 +15,15 @@ source("Analysis/00_load_parameters.R")
 # Set population size for dirichlet draws
 n_pop_cohort <- l_params_bnx_itt$n_pop_oat # update with cohort size
 # n_pop_est <- l_params_bnx_itt$n_pop_est
-n_sim <- 10000 # just to test function (will be set as n_sim)
+# n_sim <- 10000 # just to test function (will be set as n_sim)
 
 ### Process PSA results
-load(file = "outputs/psa/outcomes_psa.RData")
+load(file = "outputs/psa/outcomes_psa_itt_ps.RData")
+# load(file = "outputs/psa/outcomes_psa_itt_rr_sa.RData")
+load(file = "outputs/psa/outcomes_psa_itt_rr_100_inc_sa.RData")
+load(file = "outputs/psa/outcomes_psa_itt_rr_0_inc_sa.RData")
+load(file = "outputs/psa/outcomes_psa_pp.RData")
+load(file = "outputs/psa/outcomes_psa_pp_hd.RData")
 
 ### Summary stats ###
 # Incremental
@@ -60,7 +67,105 @@ tbl_df_summ_inc_ly_psa_itt_ps <- df_incremental_psa_itt_ps_scaled %>%
         )
       )
     ),
-    scenario = "Initiator analysis (base-case)"
+    scenario = "Initiator (primary analysis)"
+  ) %>%
+  arrange(time) %>%
+  select(scenario, time, mean, q025, q975)
+
+# FIXME: R&R
+# OUTCOMES NOT CURRENTLY CUMULATIVE
+# Life years (BNX-ITT)
+tbl_df_summ_bnx_ly_psa_itt_ps <- df_outcomes_bnx_psa_itt_ps %>%
+  as_tibble() %>%
+  mutate(
+    n_qalys_2010_cum_scaled = n_qalys_2010_ann_scaled,
+    n_qalys_2012_cum_scaled = n_qalys_2010_cum_scaled + n_qalys_2011_ann_scaled + n_qalys_2012_ann_scaled,
+    n_qalys_2014_cum_scaled = n_qalys_2012_cum_scaled + n_qalys_2013_ann_scaled + n_qalys_2014_ann_scaled,
+    n_qalys_2016_cum_scaled = n_qalys_2014_cum_scaled + n_qalys_2015_ann_scaled + n_qalys_2016_ann_scaled,
+    n_qalys_2018_cum_scaled = n_qalys_2016_cum_scaled + n_qalys_2017_ann_scaled + n_qalys_2018_ann_scaled,
+    n_qalys_2020_cum_scaled = n_qalys_2018_cum_scaled + n_qalys_2019_ann_scaled + n_qalys_2020_ann_scaled
+  ) %>%
+  select(
+    n_qalys_2010_cum_scaled,
+    n_qalys_2012_cum_scaled,
+    n_qalys_2014_cum_scaled,
+    n_qalys_2016_cum_scaled,
+    n_qalys_2018_cum_scaled,
+    n_qalys_2020_cum_scaled
+  ) %>%
+  gather("variable", "value") %>%
+  group_by(variable) %>%
+  dplyr::summarize(
+    mean = mean(value),
+    sd = sd(value),
+    q50 = quantile(value, probs = .5),
+    q025 = quantile(value, probs = .025),
+    q975 = quantile(value, probs = .975),
+    min = min(value),
+    max = max(value)
+  ) %>%
+  mutate(
+    time = ifelse(variable == "n_qalys_2010_cum_scaled", 2010,
+      ifelse(variable == "n_qalys_2012_cum_scaled", 2012,
+        ifelse(variable == "n_qalys_2014_cum_scaled", 2014,
+          ifelse(variable == "n_qalys_2016_cum_scaled", 2016,
+            ifelse(variable == "n_qalys_2018_cum_scaled", 2018,
+              ifelse(variable == "n_qalys_2020_cum_scaled", 2020, NA)
+            )
+          )
+        )
+      )
+    ),
+    scenario = "Initiator (BNX)"
+  ) %>%
+  arrange(time) %>%
+  select(scenario, time, mean, q025, q975)
+
+# FIXME: R&R
+# OUTCOMES NOT CURRENTLY CUMULATIVE
+# Life years (MET-ITT)
+tbl_df_summ_met_ly_psa_itt_ps <- df_outcomes_met_psa_itt_ps %>%
+  as_tibble() %>%
+  mutate(
+    n_qalys_2010_cum_scaled = n_qalys_2010_ann_scaled,
+    n_qalys_2012_cum_scaled = n_qalys_2010_cum_scaled + n_qalys_2011_ann_scaled + n_qalys_2012_ann_scaled,
+    n_qalys_2014_cum_scaled = n_qalys_2012_cum_scaled + n_qalys_2013_ann_scaled + n_qalys_2014_ann_scaled,
+    n_qalys_2016_cum_scaled = n_qalys_2014_cum_scaled + n_qalys_2015_ann_scaled + n_qalys_2016_ann_scaled,
+    n_qalys_2018_cum_scaled = n_qalys_2016_cum_scaled + n_qalys_2017_ann_scaled + n_qalys_2018_ann_scaled,
+    n_qalys_2020_cum_scaled = n_qalys_2018_cum_scaled + n_qalys_2019_ann_scaled + n_qalys_2020_ann_scaled
+  ) %>%
+  select(
+    n_qalys_2010_cum_scaled,
+    n_qalys_2012_cum_scaled,
+    n_qalys_2014_cum_scaled,
+    n_qalys_2016_cum_scaled,
+    n_qalys_2018_cum_scaled,
+    n_qalys_2020_cum_scaled
+  ) %>%
+  gather("variable", "value") %>%
+  group_by(variable) %>%
+  dplyr::summarize(
+    mean = mean(value),
+    sd = sd(value),
+    q50 = quantile(value, probs = .5),
+    q025 = quantile(value, probs = .025),
+    q975 = quantile(value, probs = .975),
+    min = min(value),
+    max = max(value)
+  ) %>%
+  mutate(
+    time = ifelse(variable == "n_qalys_2010_cum_scaled", 2010,
+      ifelse(variable == "n_qalys_2012_cum_scaled", 2012,
+        ifelse(variable == "n_qalys_2014_cum_scaled", 2014,
+          ifelse(variable == "n_qalys_2016_cum_scaled", 2016,
+            ifelse(variable == "n_qalys_2018_cum_scaled", 2018,
+              ifelse(variable == "n_qalys_2020_cum_scaled", 2020, NA)
+            )
+          )
+        )
+      )
+    ),
+    scenario = "Initiator (methadone)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
@@ -99,7 +204,7 @@ tbl_df_summ_inc_odf_psa_itt_ps <- df_incremental_psa_itt_ps_scaled %>%
         )
       )
     ),
-    scenario = "Initiator analysis (base-case)"
+    scenario = "Initiator (primary analysis)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
@@ -138,7 +243,7 @@ tbl_df_summ_inc_odn_psa_itt_ps <- df_incremental_psa_itt_ps_scaled %>%
         )
       )
     ),
-    scenario = "Initiator analysis (base-case)"
+    scenario = "Initiator (primary analysis)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
@@ -177,7 +282,132 @@ tbl_df_summ_inc_acm_psa_itt_ps <- df_incremental_psa_itt_ps_scaled %>%
         )
       )
     ),
-    scenario = "Initiator analysis (base-case)"
+    scenario = "Initiator (primary analysis)"
+  ) %>%
+  arrange(time) %>%
+  select(scenario, time, mean, q025, q975)
+
+##################
+### ITT-R&R SA ###
+##################
+# 20K runs
+# Life years
+# tbl_df_summ_inc_ly_psa_itt_rr_sa <- df_incremental_psa_itt_rr_sa_scaled %>%
+#   as_tibble() %>%
+#   select(
+#     n_inc_qalys_adj_2010_scaled,
+#     n_inc_qalys_adj_2012_scaled,
+#     n_inc_qalys_adj_2014_scaled,
+#     n_inc_qalys_adj_2016_scaled,
+#     n_inc_qalys_adj_2018_scaled,
+#     n_inc_qalys_adj_2020_scaled
+#   ) %>%
+#   gather("variable", "value") %>%
+#   group_by(variable) %>%
+#   dplyr::summarize(
+#     mean = mean(value),
+#     sd = sd(value),
+#     q50 = quantile(value, probs = .5),
+#     q025 = quantile(value, probs = .025),
+#     q975 = quantile(value, probs = .975),
+#     min = min(value),
+#     max = max(value)
+#   ) %>%
+#   mutate(
+#     time = ifelse(variable == "n_inc_qalys_adj_2010_scaled", 2010,
+#       ifelse(variable == "n_inc_qalys_adj_2012_scaled", 2012,
+#         ifelse(variable == "n_inc_qalys_adj_2014_scaled", 2014,
+#           ifelse(variable == "n_inc_qalys_adj_2016_scaled", 2016,
+#             ifelse(variable == "n_inc_qalys_adj_2018_scaled", 2018,
+#               ifelse(variable == "n_inc_qalys_adj_2020_scaled", 2020, NA)
+#             )
+#           )
+#         )
+#       )
+#     ),
+#     scenario = "Initiator analysis (20,000 run SA)"
+#   ) %>%
+#   arrange(time) %>%
+#   select(scenario, time, mean, q025, q975)
+
+# FIXME: R&R
+# 100% incident OAT
+# Life years
+tbl_df_summ_inc_ly_psa_itt_rr_100_inc_sa <- df_incremental_psa_itt_rr_100_inc_sa_scaled %>%
+  as_tibble() %>%
+  select(
+    n_inc_qalys_adj_2010_scaled,
+    n_inc_qalys_adj_2012_scaled,
+    n_inc_qalys_adj_2014_scaled,
+    n_inc_qalys_adj_2016_scaled,
+    n_inc_qalys_adj_2018_scaled,
+    n_inc_qalys_adj_2020_scaled
+  ) %>%
+  gather("variable", "value") %>%
+  group_by(variable) %>%
+  dplyr::summarize(
+    mean = mean(value),
+    sd = sd(value),
+    q50 = quantile(value, probs = .5),
+    q025 = quantile(value, probs = .025),
+    q975 = quantile(value, probs = .975),
+    min = min(value),
+    max = max(value)
+  ) %>%
+  mutate(
+    time = ifelse(variable == "n_inc_qalys_adj_2010_scaled", 2010,
+      ifelse(variable == "n_inc_qalys_adj_2012_scaled", 2012,
+        ifelse(variable == "n_inc_qalys_adj_2014_scaled", 2014,
+          ifelse(variable == "n_inc_qalys_adj_2016_scaled", 2016,
+            ifelse(variable == "n_inc_qalys_adj_2018_scaled", 2018,
+              ifelse(variable == "n_inc_qalys_adj_2020_scaled", 2020, NA)
+            )
+          )
+        )
+      )
+    ),
+    scenario = "Initiator (100% incident OAT)"
+  ) %>%
+  arrange(time) %>%
+  select(scenario, time, mean, q025, q975)
+
+# FIXME: R&R
+# 0% incident OAT
+# Life years
+tbl_df_summ_inc_ly_psa_itt_rr_0_inc_sa <- df_incremental_psa_itt_rr_0_inc_sa_scaled %>%
+  as_tibble() %>%
+  select(
+    n_inc_qalys_adj_2010_scaled,
+    n_inc_qalys_adj_2012_scaled,
+    n_inc_qalys_adj_2014_scaled,
+    n_inc_qalys_adj_2016_scaled,
+    n_inc_qalys_adj_2018_scaled,
+    n_inc_qalys_adj_2020_scaled
+  ) %>%
+  gather("variable", "value") %>%
+  group_by(variable) %>%
+  dplyr::summarize(
+    mean = mean(value),
+    sd = sd(value),
+    q50 = quantile(value, probs = .5),
+    q025 = quantile(value, probs = .025),
+    q975 = quantile(value, probs = .975),
+    min = min(value),
+    max = max(value)
+  ) %>%
+  mutate(
+    time = ifelse(variable == "n_inc_qalys_adj_2010_scaled", 2010,
+      ifelse(variable == "n_inc_qalys_adj_2012_scaled", 2012,
+        ifelse(variable == "n_inc_qalys_adj_2014_scaled", 2014,
+          ifelse(variable == "n_inc_qalys_adj_2016_scaled", 2016,
+            ifelse(variable == "n_inc_qalys_adj_2018_scaled", 2018,
+              ifelse(variable == "n_inc_qalys_adj_2020_scaled", 2020, NA)
+            )
+          )
+        )
+      )
+    ),
+    scenario = "Initiator (100% experienced OAT)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
@@ -219,7 +449,7 @@ tbl_df_summ_inc_ly_psa_pp <- df_incremental_psa_pp_scaled %>%
         )
       )
     ),
-    scenario = "Per-protocol analysis (alternate-case)"
+    scenario = "Per-protocol (sensitivity analysis)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
@@ -258,7 +488,7 @@ tbl_df_summ_inc_odf_psa_pp <- df_incremental_psa_pp_scaled %>%
         )
       )
     ),
-    scenario = "Per-protocol analysis (alternate-case)"
+    scenario = "Per-protocol (sensitivity analysis)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
@@ -297,7 +527,7 @@ tbl_df_summ_inc_odn_psa_pp <- df_incremental_psa_pp_scaled %>%
         )
       )
     ),
-    scenario = "Per-protocol analysis (alternate-case)"
+    scenario = "Per-protocol (sensitivity analysis)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
@@ -336,7 +566,7 @@ tbl_df_summ_inc_acm_psa_pp <- df_incremental_psa_pp_scaled %>%
         )
       )
     ),
-    scenario = "Per-protocol analysis (alternate-case)"
+    scenario = "Per-protocol (sensitivity analysis)"
   ) %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
@@ -500,11 +730,19 @@ tbl_df_summ_inc_acm_psa_pp_hd <- df_incremental_psa_pp_hd_scaled %>%
   arrange(time) %>%
   select(scenario, time, mean, q025, q975)
 
-# Combine
 tbl_df_summ_inc_ly_psa_comb <- rbind(tbl_df_summ_inc_ly_psa_itt_ps, tbl_df_summ_inc_ly_psa_pp, tbl_df_summ_inc_ly_psa_pp_hd)
 tbl_df_summ_inc_odf_psa_comb <- rbind(tbl_df_summ_inc_odf_psa_itt_ps, tbl_df_summ_inc_odf_psa_pp, tbl_df_summ_inc_odf_psa_pp_hd)
 tbl_df_summ_inc_odn_psa_comb <- rbind(tbl_df_summ_inc_odn_psa_itt_ps, tbl_df_summ_inc_odn_psa_pp, tbl_df_summ_inc_odn_psa_pp_hd)
 tbl_df_summ_inc_acm_psa_comb <- rbind(tbl_df_summ_inc_acm_psa_itt_ps, tbl_df_summ_inc_acm_psa_pp, tbl_df_summ_inc_acm_psa_pp_hd)
+
+# tbl_df_summ_inc_ly_psa_comb_sa <- rbind(tbl_df_summ_inc_ly_psa_itt_ps, tbl_df_summ_inc_ly_psa_itt_rr_sa, tbl_df_summ_inc_ly_psa_pp, tbl_df_summ_inc_ly_psa_pp_hd)
+# tbl_df_summ_inc_odf_psa_comb_sa <- rbind(tbl_df_summ_inc_odf_psa_itt_ps, tbl_df_summ_inc_odf_psa_itt_rr_sa, tbl_df_summ_inc_odf_psa_pp, tbl_df_summ_inc_odf_psa_pp_hd)
+# tbl_df_summ_inc_odn_psa_comb_sa <- rbind(tbl_df_summ_inc_odn_psa_itt_ps, tbl_df_summ_inc_odn_psa_itt_rr_sa, tbl_df_summ_inc_odn_psa_pp, tbl_df_summ_inc_odn_psa_pp_hd)
+# tbl_df_summ_inc_acm_psa_comb_sa <- rbind(tbl_df_summ_inc_acm_psa_itt_ps, tbl_df_summ_inc_acm_psa_itt_rr_sa, tbl_df_summ_inc_acm_psa_pp, tbl_df_summ_inc_acm_psa_pp_hd)
+
+# FIXME: R&R
+tbl_df_summ_ly_psa_comb_sa <- rbind(tbl_df_summ_bnx_ly_psa_itt_ps, tbl_df_summ_met_ly_psa_itt_ps)
+tbl_df_summ_ly_psa_comb_inc_prev_sa <- rbind(tbl_df_summ_inc_ly_psa_itt_ps, tbl_df_summ_inc_ly_psa_itt_rr_100_inc_sa, tbl_df_summ_inc_ly_psa_itt_rr_0_inc_sa)
 
 ## As .csv ####
 write.csv(tbl_df_summ_inc_ly_psa_comb,
@@ -531,12 +769,12 @@ write.csv(tbl_df_summ_inc_acm_psa_comb,
 tbl_df_summ_inc_ly_psa_comb$scenario <- factor(
   tbl_df_summ_inc_ly_psa_comb$scenario,
   levels = c(
-    "Initiator analysis (base-case)",
-    "Per-protocol analysis (alternate-case)",
+    "Initiator (primary analysis)",
+    "Per-protocol (sensitivity analysis)",
     "High-dose (sensitivity analysis)"
   )
 )
-
+# Main plot
 plot_psa_ly_scaled <- ggplot(tbl_df_summ_inc_ly_psa_comb) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "darkgrey", linewidth = 0.75) + # NEW
   geom_pointrange(
@@ -544,14 +782,18 @@ plot_psa_ly_scaled <- ggplot(tbl_df_summ_inc_ly_psa_comb) +
     position = position_dodge(width = .75),
     linewidth = .75
   ) +
-  scale_color_manual(values = c("#FC4C02", "#005778", "#008E97")) +
+  scale_color_manual(values = c(
+    "Initiator (primary analysis)" = "#FC4C02",
+    "Per-protocol (sensitivity analysis)" = "#005778",
+    "High-dose (sensitivity analysis)" = "#008E97"
+  )) +
   scale_linetype_manual(values = c(
-    "Initiator analysis (base-case)" = "solid",
-    "Per-protocol analysis (alternate-case)" = "solid",
+    "Initiator (primary analysis)" = "solid",
+    "Per-protocol (sensitivity analysis)" = "solid",
     "High-dose (sensitivity analysis)" = "solid"
   )) +
   labs(y = "Incremental life years (BNX vs. methadone)", x = "Year") +
-  scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), labels = c("2010", "2012", "2014", "2016", "2018", "2020*"), limits = c(2009, 2021)) +
+  scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), labels = c("2010", "2012", "2014", "2016", "2018", "2020"), limits = c(2009, 2021)) +
   theme(
     panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"),
     legend.key = element_rect(fill = "transparent", colour = "transparent"),
@@ -563,7 +805,130 @@ plot_psa_ly_scaled <- ggplot(tbl_df_summ_inc_ly_psa_comb) +
   guides(color = guide_legend(nrow = 2), linetype = guide_legend(nrow = 2))
 
 ggsave(plot_psa_ly_scaled,
-  filename = "plots/psa/psa-life-years-lost_scaled.png",
+  filename = "plots/psa/psa-life-years-lost-scaled.png",
+  width = 8, height = 6, dpi = 350
+)
+ggsave(plot_psa_ly_scaled,
+  filename = "plots/psa/psa-life-years-lost-scaled.pdf",
+  width = 8, height = 6
+)
+
+# Sensitivity analysis plot
+# tbl_df_summ_inc_ly_psa_comb_sa$scenario <- factor(
+#   tbl_df_summ_inc_ly_psa_comb_sa$scenario,
+#   levels = c(
+#     "Initiator analysis (base-case)",
+#     "Initiator analysis (20,000 run SA)",
+#     "Per-protocol analysis (alternate-case)",
+#     "High-dose (sensitivity analysis)"
+#   )
+# )
+# plot_psa_ly_scaled_sa <- ggplot(tbl_df_summ_inc_ly_psa_comb_sa) +
+#   geom_hline(yintercept = 0, linetype = "dashed", color = "darkgrey", linewidth = 0.75) + # NEW
+#   geom_pointrange(
+#     aes(x = time, y = mean, ymin = q025, ymax = q975, color = scenario, linetype = scenario),
+#     position = position_dodge(width = .75),
+#     linewidth = .75
+#   ) +
+#   scale_color_manual(values = c("#FC4C02", "#C8102E", "#005778", "#008E97")) +
+#   scale_linetype_manual(values = c(
+#     "Initiator analysis (base-case)" = "solid",
+#     "Initiator analysis (20,000 run SA)" = "solid",
+#     "Per-protocol analysis (alternate-case)" = "solid",
+#     "High-dose (sensitivity analysis)" = "solid"
+#   )) +
+#   labs(y = "Incremental life years (BNX vs. methadone)", x = "Year") +
+#   scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), labels = c("2010", "2012", "2014", "2016", "2018", "2020"), limits = c(2009, 2021)) +
+#   theme(
+#     panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"),
+#     legend.key = element_rect(fill = "transparent", colour = "transparent"),
+#     plot.title = element_text(hjust = 0.02, vjust = -7),
+#     legend.position = "bottom",
+#     legend.title = element_blank(),
+#     text = element_text(size = 15)
+#   ) +
+#   guides(color = guide_legend(nrow = 2), linetype = guide_legend(nrow = 2))
+
+# ggsave(plot_psa_ly_scaled_sa,
+#   filename = "plots/psa/psa-life-years-lost_scaled-SA.png",
+#   width = 8, height = 6, dpi = 350
+# )
+
+# FIXME: R&R
+# Incident prevalence sensitivity analysis plot
+tbl_df_summ_ly_psa_comb_inc_prev_sa$scenario <- factor(
+  tbl_df_summ_ly_psa_comb_inc_prev_sa$scenario,
+  levels = c(
+    "Initiator (primary analysis)",
+    "Initiator (100% incident OAT)",
+    "Initiator (100% experienced OAT)"
+  )
+)
+plot_psa_ly_scaled_inc_prev_sa <- ggplot(tbl_df_summ_ly_psa_comb_inc_prev_sa) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "darkgrey", linewidth = 0.75) + # NEW
+  geom_pointrange(
+    aes(x = time, y = mean, ymin = q025, ymax = q975, color = scenario, linetype = scenario),
+    position = position_dodge(width = .75),
+    linewidth = .75
+  ) +
+  scale_color_manual(values = c("#FC4C02", "#d8b365", "#5ab4ac")) +
+  scale_linetype_manual(values = c(
+    "Initiator (primary analysis)" = "solid",
+    "Initiator (100% incident OAT)" = "solid",
+    "Initiator (100% experienced OAT)" = "solid"
+  )) +
+  labs(y = "Incremental life years (BNX vs. methadone)", x = "Year") +
+  scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), labels = c("2010", "2012", "2014", "2016", "2018", "2020"), limits = c(2009, 2021)) +
+  theme(
+    panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"),
+    legend.key = element_rect(fill = "transparent", colour = "transparent"),
+    plot.title = element_text(hjust = 0.02, vjust = -7),
+    legend.position = "bottom",
+    legend.title = element_blank(),
+    text = element_text(size = 15)
+  ) +
+  guides(color = guide_legend(nrow = 2), linetype = guide_legend(nrow = 2))
+
+ggsave(plot_psa_ly_scaled_inc_prev_sa,
+  filename = "plots/psa/psa-life-years-lost_scaled-inc-prev-sa.png",
+  width = 8, height = 6, dpi = 350
+)
+
+# FIXME: R&R
+# Total life years plot
+tbl_df_summ_ly_psa_comb_sa$scenario <- factor(
+  tbl_df_summ_ly_psa_comb_sa$scenario,
+  levels = c(
+    "Initiator (BNX)",
+    "Initiator (methadone)"
+  )
+)
+plot_psa_ly_total_scaled_sa <- ggplot(tbl_df_summ_ly_psa_comb_sa) +
+  geom_pointrange(
+    aes(x = time, y = mean, ymin = q025, ymax = q975, color = scenario, linetype = scenario),
+    position = position_dodge(width = .75),
+    linewidth = .75
+  ) +
+  scale_color_manual(values = c("#008E97", "#005778")) +
+  scale_linetype_manual(values = c(
+    "Initiator (BNX)" = "solid",
+    "Initiator (methadone)" = "solid"
+  )) +
+  labs(y = "Total life years", x = "Year") +
+  scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), labels = c("2010", "2012", "2014", "2016", "2018", "2020"), limits = c(2009, 2021)) +
+  theme(
+    panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"),
+    legend.key = element_rect(fill = "transparent", colour = "transparent"),
+    plot.title = element_text(hjust = 0.02, vjust = -7),
+    legend.position = "bottom",
+    legend.title = element_blank(),
+    text = element_text(size = 15)
+  ) +
+  guides(color = guide_legend(nrow = 2), linetype = guide_legend(nrow = 2))
+
+# Save plot
+ggsave(plot_psa_ly_total_scaled_sa,
+  filename = "plots/psa/psa-life-years-total-bnx-met-sa.png",
   width = 8, height = 6, dpi = 350
 )
 
@@ -580,7 +945,7 @@ plot_psa_odf_scaled <- ggplot(tbl_df_summ_inc_odf_psa_comb) +
   ) +
   scale_color_manual(values = c("#FC4C02", "#005778", "#008E97")) + # NEW
   labs(y = "Fatal overdoses (BNX vs. methadone)", x = "Year") +
-  scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), labels = c("2010", "2012", "2014", "2016", "2018", "2020*"), limits = c(2009, 2021)) +
+  scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), labels = c("2010", "2012", "2014", "2016", "2018", "2020"), limits = c(2009, 2021)) +
   theme(
     panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"),
     legend.key = element_rect(fill = "transparent", colour = "transparent"),
@@ -608,7 +973,7 @@ plot_psa_odn_scaled <- ggplot(tbl_df_summ_inc_odn_psa_comb) +
   ) +
   scale_color_manual(values = c("#FC4C02", "#005778", "#008E97")) + # NEW
   labs(y = "Non-fatal overdoses (BNX vs. methadone)", x = "Year") +
-  scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), labels = c("2010", "2012", "2014", "2016", "2018", "2020*"), limits = c(2009, 2021)) +
+  scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), labels = c("2010", "2012", "2014", "2016", "2018", "2020"), limits = c(2009, 2021)) +
   theme(
     panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"),
     legend.key = element_rect(fill = "transparent", colour = "transparent"),
@@ -636,7 +1001,7 @@ plot_psa_acm_scaled <- ggplot(tbl_df_summ_inc_acm_psa_comb) +
   ) +
   scale_color_manual(values = c("#FC4C02", "#005778", "#008E97")) + # NEW
   labs(y = "All-cause deaths (BNX vs. methadone)", x = "Year") +
-  scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), labels = c("2010", "2012", "2014", "2016", "2018", "2020*"), limits = c(2009, 2021)) +
+  scale_x_continuous(breaks = c(2010, 2012, 2014, 2016, 2018, 2020), labels = c("2010", "2012", "2014", "2016", "2018", "2020"), limits = c(2009, 2021)) +
   theme(
     panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"),
     legend.key = element_rect(fill = "transparent", colour = "transparent"),

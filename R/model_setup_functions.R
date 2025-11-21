@@ -118,7 +118,7 @@ markov_model <- function(l_params_all,
     )
 
     #### Choose estimate for BNX vs methadone hazard ratio ####
-    if (ce_est == "itt_ps") {
+    if (ce_est == "itt_ps" || ce_est == "itt_rr_sa" || ce_est == "itt_rr_100_inc_sa" || ce_est == "itt_rr_0_inc_sa") {
       # Treatment discontinuation
       hr_ce_tx_inc <- hr_tx_itt_ps_inc
       hr_ce_tx_prev <- hr_tx_itt_ps_prev
